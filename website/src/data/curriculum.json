@@ -1,0 +1,58 @@
+[
+  {
+    "title": "Module 1: Foundations & The Nervous System",
+    "weeks": "1-5",
+    "slug": "/module-1",
+    "lessons": [
+      {
+        "title": "Introduction to Physical AI",
+        "slug": "/module-1/lesson-1.1"
+      },
+      {
+        "title": "ROS 2 Fundamentals",
+        "slug": "/module-1/lesson-1.2"
+      }
+    ]
+  },
+  {
+    "title": "Module 2: The Digital Twin",
+    "weeks": "6-7",
+    "slug": "/module-2",
+    "lessons": [
+      {
+        "title": "Gazebo & Physics",
+        "slug": "/module-2/lesson-2.1"
+      },
+      {
+        "title": "Visualization with Unity",
+        "slug": "/module-2/lesson-2.2"
+      }
+    ]
+  },
+  {
+    "title": "Module 3: The AI-Robot Brain",
+    "weeks": "8-10",
+    "slug": "/module-3",
+    "lessons": [
+      {
+        "title": "The NVIDIA Isaac Platform",
+        "slug": "/module-3/lesson-3.1"
+      }
+    ]
+  },
+  {
+    "title": "Module 4: Embodied Intelligence & VLA",
+    "weeks": "11-13",
+    "slug": "/module-4",
+    "lessons": [
+      {
+        "title": "Humanoid Mechanics",
+        "slug": "/module-4/lesson-4.1"
+      },
+      {
+        "title": "Vision-Language-Action",
+        "slug": "/module-4/lesson-4.2"
+      }
+    ]
+  }
+]
