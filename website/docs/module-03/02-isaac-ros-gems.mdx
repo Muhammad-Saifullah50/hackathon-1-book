@@ -1,0 +1,136 @@
+---
+title: Hardware-Accelerated Perception (Isaac ROS)
+sidebar_label: 2. Isaac ROS Gems
+id: isaac-ros-gems
+description: Hardware-accelerated perception on NVIDIA Jetson with Isaac ROS packages.
+custom_edit_url: null
+experience_level: Advanced
+---
+
+# Hardware-Accelerated Perception: Isaac ROS
+
+<div className="hero shadow-lg rounded-lg p-6 mb-8 bg-gradient-to-r from-red-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 border border-red-100 dark:border-gray-700">
+  <h2 className="text-2xl font-bold mb-4">The Robot's Edge Brain</h2>
+  <p className="text-lg">
+    Moving beyond high-fidelity simulation on a powerful workstation, we now focus on bringing intelligence to the robot itself. <strong>NVIDIA Isaac ROS</strong> provides a collection of hardware-accelerated packages that run on embedded platforms like the Jetson, enabling real-time perception for autonomous robots.
+  </p>
+</div>
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+-   Understand the role of NVIDIA Jetson as an "Edge Brain."
+-   Explain the benefits of hardware acceleration (CUDA/TensorRT) for robotics.
+-   Grasp the concepts of Visual SLAM (VSLAM) and Nvblox.
+-   Understand how Isaac ROS integrates with the ROS 2 Nav2 stack.
+
+## 1. The Edge Brain (Jetson)
+
+The **NVIDIA Jetson Orin Nano/NX** is a powerful, compact, and energy-efficient platform designed for AI at the edge. It brings GPU-accelerated computing directly to your robot.
+
+### Hardware Acceleration: CUDA & TensorRT
+*   **Workstation (Isaac Sim)** vs. **Edge (Jetson Orin)**:
+    *   On a workstation, you have vast GPU resources for training and complex simulations.
+    *   On the edge, you need to run inference efficiently and in real-time with limited power.
+*   **CUDA**: NVIDIA's parallel computing platform and programming model for GPUs. It allows developers to use a CUDA-enabled GPU for general-purpose processing.
+*   **TensorRT**: NVIDIA's SDK for high-performance deep learning inference. It optimizes trained neural networks for maximum throughput and low latency on NVIDIA GPUs, including Jetson.
+
+**Code Example: TensorRT Engine Loading (Edge (Jetson Orin))**
+This C++ snippet illustrates how a pre-trained and optimized TensorRT engine is loaded and used for inference on a Jetson device.
+
+```cpp
+// From context7: /dusty-nv/jetson-inference
+
+#include <NvInferRuntime.h> // For nvinfer1::ICudaEngine
+#include <vector>
+#include <string>
+#include <cuda_runtime.h> // For cudaStream_t
+
+enum deviceType { DEVICE_GPU = 0, DEVICE_DLA, DEVICE_DLA_0 = DEVICE_DLA, DEVICE_DLA_1, NUM_DEVICES };
+
+// Function to load TensorRT engine from an existing CUDA engine instance
+bool LoadEngine(nvinfer1::ICudaEngine* engine,
+                const std::vector<std::string>& input_blobs,
+                const std::vector<std::string>& output_blobs,
+                deviceType device = DEVICE_GPU,
+                cudaStream_t stream = NULL);
+
+// Usage example (conceptual - part of a larger inference pipeline)
+// nvinfer1::ICudaEngine* myEngine = /* ... obtain deserialized engine from file/memory ... */;
+// std::vector<std::string> inputs = {"input_blob"}; // Input layer names
+// std::vector<std::string> outputs = {"output_blob"}; // Output layer names
+// LoadEngine(myEngine, inputs, outputs, DEVICE_GPU); // Load engine to GPU
+```
+
+## 2. The "Gems": Isaac ROS Packages
+
+**Isaac ROS** provides a suite of hardware-accelerated ROS 2 packages ("Gems") that enable developers to build high-performance robotics applications. Key gems include:
+*   **VSLAM**: For Visual Simultaneous Localization and Mapping.
+*   **Nvblox**: For 3D reconstruction and mapping from depth data.
+
+### Visual SLAM (VSLAM)
+**VSLAM** uses camera images (typically stereo or RGB-D) to simultaneously build a map of an unknown environment and estimate the robot's pose (position and orientation) within that map.
+
+**Pipeline**:
+*   **Input**: Stereo Camera (e.g., RealSense D435i).
+*   **Process**: Isaac ROS VSLAM Node (e.g., `isaac_ros_visual_slam`). This node takes raw camera data and outputs localization and mapping information.
+*   **Output**:
+    *   Robot Pose (Odometry): "Where am I?"
+    *   Map: "Where are the walls and objects?"
+
+**Configuration: `isaac_ros_visual_slam` Launch File (Edge (Jetson Orin))**
+The `isaac_ros_visual_slam` package provides highly optimized nodes for VSLAM. It is typically configured via a ROS 2 Python Launch file.
+
+```python
+# Conceptual structure, specific parameters from official Isaac ROS documentation
+# From context7: /nvidia-isaac-ros/isaac_perceptor (general Isaac ROS package)
+# Note: Exact launch file parameters are found in official Isaac ROS documentation for isaac_ros_visual_slam.
+
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='isaac_ros_visual_slam',
+            executable='isaac_ros_visual_slam_node', # The executable name might vary
+            name='visual_slam_node',
+            output='screen',
+            parameters=[
+                # Input topics (e.g., /stereo_camera/left/image_raw, /stereo_camera/right/image_raw)
+                {'camera_frame': 'camera_link'},
+                {'odom_frame': 'odom'},
+                {'map_frame': 'map'},
+                {'enable_localization_n_mapping': True},
+                {'denoise_input_images': True},
+                # ... other parameters for camera intrinsics, feature tracking, etc. ...
+            ],
+            remappings=[
+                ('/stereo_camera/left/image_raw', '/front_stereo_camera/left/image_raw'),
+                ('/stereo_camera/right/image_raw', '/front_stereo_camera/right/image_raw'),
+                # ... other remappings ...
+            ]
+        )
+    ])
+```
+
+### 3. Navigation (Nav2)
+
+Once your robot knows where it is (localization from VSLAM) and has a map of its environment, it can navigate. The **ROS 2 Nav2 stack** provides a comprehensive suite of tools for mobile robot navigation.
+
+**Integration: VSLAM feeds Nav2**
+Isaac ROS VSLAM outputs crucial data (robot pose, map updates) that directly feeds into Nav2:
+*   **Localization**: Nav2 uses the estimated robot pose from VSLAM to understand its current position.
+*   **Mapping**: VSLAM's generated map helps Nav2 plan collision-free paths.
+
+### Activity: Point and Click
+
+Set up your robot with Isaac ROS VSLAM and Nav2. In Rviz, use the "2D Nav Goal" tool to click a point on the map. Observe as your robot:
+1.  Plans a global path (long-range trajectory).
+2.  Executes a local plan (avoids dynamic obstacles).
+3.  Reaches the goal, navigating around obstacles.
+
+---
+
+**Next:** Let's combine Isaac Sim and Isaac ROS knowledge in the **Perception Pipeline Capstone** to build a Follower Robot.

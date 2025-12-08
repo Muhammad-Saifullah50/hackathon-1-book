@@ -1,0 +1,214 @@
+---
+title: The Voice Interface (Ears)
+sidebar_label: 1. Voice to Action
+id: voice-to-action
+description: Integrating voice commands into robotics using OpenAI Whisper and Python audio libraries.
+custom_edit_url: null
+experience_level: Beginner
+---
+
+# The Voice Interface: Ears
+
+<div className="hero shadow-lg rounded-lg p-6 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 border border-blue-100 dark:border-gray-700">
+  <h2 className="text-2xl font-bold mb-4">Listening to the Human</h2>
+  <p className="text-lg">
+    For a robot to truly interact with us, it needs to understand our language. This chapter explores how to give a robot "ears" by integrating speech recognition, turning spoken words into actionable commands.
+  </p>
+</div>
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+-   Understand the pipeline for converting audio to text using OpenAI Whisper.
+-   Identify hardware considerations for running Whisper models on Workstation vs. Jetson.
+-   Implement a basic ROS 2 node that captures audio and publishes transcribed text.
+
+## 1. Hearing the World
+
+The first step in understanding human commands is to convert spoken audio into text. **OpenAI Whisper** (or open-source equivalents like `distil-whisper`) provides a powerful solution for this.
+
+### The Pipeline: Microphone -> Audio Buffer -> Whisper Model -> Text String
+
+1.  **Microphone**: Captures analog sound waves.
+2.  **Audio Buffer**: Converts analog sound to digital data (e.g., WAV format).
+3.  **Whisper Model**: Processes the audio data to transcribe it into text.
+4.  **Text String**: The output, which can then be used by other robot systems.
+
+### Hardware Reality: Whisper Model Sizes
+
+Whisper models come in various sizes, offering different trade-offs between accuracy, speed, and computational requirements.
+
+*   **Workstation**: Powerful GPUs allow for running "Large" or "Large-v3" models, providing the highest accuracy but demanding significant resources.
+*   **Jetson (Edge)**: Embedded platforms like the NVIDIA Jetson Orin are constrained. You'll typically use "Tiny" or "Base" models, often quantized for efficiency, sacrificing some accuracy for real-time performance.
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Model Size</TableHead>
+      <TableHead>Approx. Parameters</TableHead>
+      <TableHead>Latency (Workstation/Jetson)</TableHead>
+      <TableHead>Accuracy</TableHead>
+      <TableHead>Hardware Target</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell className="font-medium">Tiny</TableCell>
+      <TableCell>39M</TableCell>
+      <TableCell>Very Low</TableCell>
+      <TableCell>Lower</TableCell>
+      <TableCell>Edge (Jetson)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell className="font-medium">Base</TableCell>
+      <TableCell>74M</TableCell>
+      <TableCell>Low</TableCell>
+      <TableCell>Medium</TableCell>
+      <TableCell>Edge (Jetson)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell className="font-medium">Small</TableCell>
+      <TableCell>244M</TableCell>
+      <TableCell>Medium</TableCell>
+      <TableCell>Good</TableCell>
+      <TableCell>Workstation</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell className="font-medium">Medium</TableCell>
+      <TableCell>769M</TableCell>
+      <TableCell>High</TableCell>
+      <TableCell>Very Good</TableCell>
+      <TableCell>Workstation</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell className="font-medium">Large / Large-v3</TableCell>
+      <TableCell>1550M</TableCell>
+      <TableCell>Very High</TableCell>
+      <TableCell>Excellent</TableCell>
+      <TableCell>Workstation</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+
+## 2. Code Lab: The "Listening Node"
+
+**Objective:** Create a ROS 2 node that continuously listens for audio, detects a wake word (or simply captures a segment of speech upon a trigger), and transcribes it using Whisper. The transcribed text will then be published to a ROS 2 topic.
+
+### Implementation Overview
+
+1.  **Audio Capture**: Use a Python audio library like `PyAudio` to access your microphone and record audio into a buffer.
+2.  **Wake Word Detection / Audio Trigger**: This can be a simple threshold-based Voice Activity Detection (VAD) or a dedicated wake word engine. For this lab, we'll focus on capturing a segment after a conceptual trigger.
+3.  **Whisper Transcription**: Send the captured audio to the Whisper model for transcription.
+4.  **ROS 2 Publication**: Publish the resulting text string to a designated ROS 2 topic.
+
+**Python Audio Capture (Workstation/Edge)**
+
+This snippet demonstrates basic audio recording using `PyAudio`.
+
+```python
+# From context7: /cristifati/pyaudio
+import pyaudio
+import wave
+import time
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String # To publish transcribed text
+
+# ROS 2 Node for Audio Listener
+class AudioListenerNode(Node):
+    def __init__(self):
+        super().__init__('audio_listener')
+        self.publisher_ = self.create_publisher(String, 'human_command', 10)
+        self.get_logger().info('Audio Listener Node started.')
+        self.audio_capture_active = False # Flag to control recording
+
+        # PyAudio setup
+        self.chunk = 1024
+        self.format = pyaudio.paInt16
+        self.channels = 1
+        self.rate = 16000 # Whisper models often prefer 16kHz
+        self.p = pyaudio.PyAudio()
+        self.stream = self.p.open(format=self.format,
+                                 channels=self.channels,
+                                 rate=self.rate,
+                                 input=True,
+                                 frames_per_buffer=self.chunk,
+                                 stream_callback=self._audio_callback) # Use callback for non-blocking
+
+        self.frames = []
+        self.recording_start_time = 0
+        self.recording_duration = 5 # seconds to record after trigger
+
+        # Whisper model setup (conceptual, actual loading depends on installation)
+        # import whisper
+        # self.whisper_model = whisper.load_model("base") # Or "tiny", depending on hardware
+
+        # Start listening stream
+        self.stream.start_stream()
+        self.get_logger().info("Listening for audio...")
+
+    def _audio_callback(self, in_data, frame_count, time_info, status):
+        if self.audio_capture_active:
+            self.frames.append(in_data)
+            if (time.time() - self.recording_start_time) > self.recording_duration:
+                self.audio_capture_active = False
+                self.get_logger().info("Recording stopped. Processing audio...")
+                self._process_and_publish_audio()
+        return (in_data, pyaudio.paContinue)
+
+    def trigger_recording(self):
+        # This would be called by a wake word detector or a button press
+        if not self.audio_capture_active:
+            self.get_logger().info("Recording triggered!")
+            self.frames = []
+            self.recording_start_time = time.time()
+            self.audio_capture_active = True
+
+    def _process_and_publish_audio(self):
+        # Save recorded audio to a temporary WAV file
+        wf = wave.open("temp_audio.wav", 'wb')
+        wf.setnchannels(self.channels)
+        wf.setsampwidth(self.p.get_sample_size(self.format))
+        wf.setframerate(self.rate)
+        wf.writeframes(b''.join(self.frames))
+        wf.close()
+
+        # Transcribe using Whisper (conceptual)
+        transcribed_text = "Simulated transcribed text: Go to the kitchen and find the red apple." # Replace with actual Whisper call
+        # result = self.whisper_model.transcribe("temp_audio.wav")
+        # transcribed_text = result["text"]
+
+        msg = String()
+        msg.data = transcribed_text
+        self.publisher_.publish(msg)
+        self.get_logger().info(f'Published: "{msg.data}"')
+
+    def destroy_node(self):
+        self.stream.stop_stream()
+        self.stream.close()
+        self.p.terminate()
+        super().destroy_node()
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = AudioListenerNode()
+    
+    # In a real scenario, a wake word detector would call node.trigger_recording()
+    # For demonstration, we'll trigger it once after a delay
+    node.get_logger().info("Simulating wake word detection in 3 seconds...")
+    time.sleep(3)
+    node.trigger_recording()
+
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+**Output**: Publish the transcribed text to a topic `/human_command` (String).
+
+---
+
+**Next:** With our robot's ears working, let's explore how it "thinks" with **Cognitive Planning** using **LLMs**.

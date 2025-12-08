@@ -1,0 +1,159 @@
+---
+title: Photorealistic Simulation (Isaac Sim)
+sidebar_label: 1. Isaac Sim Setup
+id: isaac-sim-setup
+description: Introduction to NVIDIA Omniverse, Isaac Sim, and synthetic data generation.
+custom_edit_url: null
+experience_level: Advanced
+---
+
+# Photorealistic Simulation: Isaac Sim
+
+<div className="hero shadow-lg rounded-lg p-6 mb-8 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 border border-teal-100 dark:border-gray-700">
+  <h2 className="text-2xl font-bold mb-4">Crafting Reality in the Omniverse</h2>
+  <p className="text-lg">
+    To train intelligent robots, we need data. Lots of it. And often, real-world data is expensive, dangerous, or impossible to collect. This is where <strong>NVIDIA Isaac Sim</strong> comes in, built on the <strong>Omniverse</strong> platform, allowing us to create virtual worlds for training AI.
+  </p>
+</div>
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+-   Understand NVIDIA Omniverse and Universal Scene Description (USD).
+-   Explain the importance of high-fidelity rendering for AI perception.
+-   Install and set up NVIDIA Isaac Sim.
+-   Generate synthetic datasets using the Replicator API.
+
+## 1. The Omniverse
+
+NVIDIA Omniverse is a platform for 3D design collaboration and simulation. It's built on **USD (Universal Scene Description)**, an open-source framework for interchange of 3D computer graphics data. Think of USD as the HTML for 3D worlds.
+
+### Why High-Fidelity Rendering for AI Perception?
+AI models trained on simplistic or unrealistic simulations often fail in the real world. Ray tracing, a core feature of Isaac Sim, provides:
+*   **Accurate Shadows**: Crucial for depth perception.
+*   **Realistic Reflections**: Important for understanding surfaces and lighting.
+*   **Complex Lighting**: Varied conditions help generalize models.
+
+This realism helps create **synthetic data** that closely mimics real-world sensor inputs, leading to more robust AI models.
+
+<Alert variant="destructive">
+  <AlertTitle>Hardware Check</AlertTitle>
+  <AlertDescription>
+    Running NVIDIA Isaac Sim requires substantial GPU power. An **NVIDIA RTX 4070 Ti (or higher) with 12GB+ VRAM** is an absolute minimum requirement for a smooth experience. Lower specifications may lead to significant performance issues.
+  </AlertDescription>
+</Alert>
+
+### Setup: Installing Isaac Sim
+Isaac Sim is typically installed via the NVIDIA Omniverse Launcher. It can also be run as a Docker container. Refer to the official NVIDIA Isaac Sim documentation for the most up-to-date installation instructions.
+
+## 2. Synthetic Data Generation
+
+"Why label images by hand when the simulator knows exactly where the cup is?" This is the core idea behind synthetic data generation. Isaac Sim, through its **Replicator API**, allows you to programmatically create massive, perfectly labeled datasets by controlling every aspect of the simulation.
+
+### The Replicator API (Python)
+The Replicator API (within `isaacsim.replicator.domain_randomization` and `omni.replicator.core`) enables **domain randomization**, where you vary parameters of the simulation (e.g., textures, lighting, object positions, physics properties) to generate diverse data.
+
+**Python Code Lab: Spawning Cubes and Randomizing Lighting (Workstation (Isaac Sim))**
+
+This script demonstrates how to spawn multiple cubes, randomize their positions, and vary lighting conditions to generate diverse data.
+
+```python
+# From context7: /isaac-sim/isaacsim (isaacsim.replicator.domain_randomization, omni.replicator.core)
+
+import isaacsim.replicator.domain_randomization as dr
+import omni.replicator.core as rep
+from omni.isaac.core.utils.nucleus import get_assets_root_path
+from omni.isaac.core.utils.prims import create_prim
+import numpy as np
+import omni.timeline
+import omni.usd
+
+# Setup simulation_app and world (assumed to be initialized outside this snippet)
+# e.g., from omni.isaac.kit import SimulationApp
+# simulation_app = SimulationApp({"headless": False})
+# from omni.isaac.core import World
+# world = World(stage_units_in_meters=1.0)
+# world.scene.add_default_ground_plane()
+# world.reset()
+
+# Ensure a stage is open
+stage = omni.usd.get_context().get_stage()
+if not stage:
+    omni.usd.get_context().new_stage()
+    stage = omni.usd.get_context().get_stage()
+
+# Example: Get path to a default cube asset
+assets_root_path = get_assets_root_path()
+if assets_root_path is None:
+    print("WARNING: Could not find assets root path. Synthetic data generation might fail.")
+    cube_usd_path = "/Isaac/Props/Simple/Cube.usd" # Fallback path
+else:
+    cube_usd_path = assets_root_path + "/Props/Simple/Cube.usd"
+
+# Create a Replicator writer for labeled data (e.g., bounding boxes, instance segmentation)
+# rep.WriterRegistry.get_writer("BasicWriter") # Example, specific writer depends on data
+
+# Create a view for randomization
+# Assuming `world` and `simulation_app` are already initialized
+# object_view = dr.physics_view.create_rigid_prim_view("/World/Cube*") # View for all spawned cubes
+# dr.physics_view.register_simulation_context(world)
+# dr.physics_view.register_rigid_prim_view(object_view)
+
+
+# Define randomization rules (simplified for example)
+num_envs = 1 # Single environment for this example (can be increased for parallel envs)
+
+# Context manager for randomization
+# with dr.trigger.on_rl_frame(num_envs=num_envs):
+#     # Randomize gravity (example of physics randomization)
+#     with dr.gate.on_interval(interval=20):
+#         dr.physics_view.randomize_simulation_context(
+#             operation="scaling",
+#             gravity=rep.distribution.uniform((1, 1, 0.0), (1, 1, 2.0)), # Randomize Z-component of gravity
+#         )
+    
+#     # Randomize cube positions
+#     with dr.gate.on_interval(interval=1): # Every frame for object randomization
+#         dr.physics_view.randomize_rigid_prim_view(
+#             view_name=object_view.name,
+#             operation="additive",
+#             position=rep.distribution.uniform((-5.0, -5.0, 0.5), (5.0, 5.0, 5.0)), # Random XYZ position
+#         )
+
+# Spawn 100 cubes (initial state)
+# For this example, we'll just spawn, not fully randomize in a loop here.
+for i in range(5): # Spawn 5 cubes for demonstration
+    create_prim(
+        prim_path=f"/World/Cube{i}",
+        usd_path=cube_usd_path,
+        position=np.random.rand(3) * 10 - 5 # Initial random position
+    )
+
+# Basic example of randomizing a light source
+distant_light_path = "/World/DistantLight"
+create_prim(distant_light_path, "DistantLight", scale=1.0)
+light_prim = omni.usd.get_prim_at_path(distant_light_path)
+omni.usd.get_attribute(light_prim.GetPath().AppendProperty("intensity")).Set(rep.distribution.uniform(1000.0, 5000.0))
+omni.usd.get_attribute(light_prim.GetPath().AppendProperty("angle")).Set(rep.distribution.uniform(0.0, 180.0))
+
+# Run the replicator orchestrator to apply randomization and capture data (conceptual)
+# rep.orchestrator.run()
+
+# Simple simulation loop (requires simulation_app and world)
+# If running in Isaac Sim environment:
+# omni.timeline.get_timeline_interface().play()
+# for i in range(10): # Simulate 10 frames
+#     world.step(render=True)
+#     print(f"Frame {i}: Simulation step.")
+#     # Here, you would typically capture camera data and save labeled datasets
+#     # using annotators attached to a camera.
+# omni.timeline.get_timeline_interface().stop()
+
+print("Synthetic data generation concept demonstrated.")
+# simulation_app.close() # Close application when done
+```
+
+---
+
+**Next:** Let's transition from the workstation to the **Edge Brain** and explore **Hardware-Accelerated Perception** with **Isaac ROS**.

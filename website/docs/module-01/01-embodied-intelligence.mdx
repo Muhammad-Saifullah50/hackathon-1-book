@@ -1,0 +1,122 @@
+---
+title: The Awakening
+sidebar_label: 1. Embodied Intelligence
+id: embodied-intelligence
+description: Introduction to Physical AI and the transition from digital to embodied intelligence.
+custom_edit_url: null
+experience_level: Beginner
+---
+
+# The Awakening: The Era of Embodied Intelligence
+
+<div className="hero shadow-lg rounded-lg p-6 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 border border-blue-100 dark:border-gray-700">
+  <h2 className="text-2xl font-bold mb-4">Why does a robot need to see?</h2>
+  <p className="text-lg">
+    Welcome to the frontier of <strong>Physical AI</strong>. We are leaving the safe, infinite world of software for the unforgiving, gravity-bound reality of hardware. Here, there is no "undo" button for a broken motor.
+  </p>
+</div>
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+-   Distinguish between "Digital AI" (LLMs) and "Physical AI" (Robotics).
+-   Explain the "Sense -> Think -> Act" loop.
+-   Identify the "Three Brains" architecture required for modern humanoid robotics.
+-   Understand the cost and complexity implications of building a home robotics lab.
+
+## 1. Introduction: Digital vs. Physical AI
+
+Artificial Intelligence is moving from screens to the physical world. While "Digital AI" like ChatGPT lives on servers and processes text or images, **Physical AI** must interact with the real world.
+
+### The Physics Limit
+
+In software, you can simulate a thousand outcomes in a second. In robotics, you are bound by the laws of physics:
+
+*   **Gravity:** Your robot will fall if not balanced.
+*   **Friction:** Wheels slip, joints bind.
+*   **Energy:** Batteries die, unlike wall-powered servers.
+*   **Time:** Real-time means *now*, not "when the request finishes."
+
+### The Loop: Sense -> Think -> Act
+
+Every robot operates on a fundamental cycle:
+
+1.  **Sense**: Gather data from the world (Cameras, LiDAR).
+2.  **Think**: Process data to decide on an action (Planning, Control).
+3.  **Act**: Execute the decision (Motors, Hydraulics).
+
+## 2. Hardware Reality Check: The "Three Brains"
+
+Modern humanoid robotics relies on a distributed architecture we call the "Three Brains".
+
+### 1. The Simulator (God Mode)
+**Hardware:** High-Performance Workstation (e.g., RTX 4070 Ti+).
+This is where you train your AI. In simulation (Gazebo, Isaac Sim), you can run millions of training steps without breaking hardware. This requires massive parallel compute.
+
+### 2. The Edge Brain (Inference)
+**Hardware:** NVIDIA Jetson Orin Nano/NX.
+This is the computer *inside* the robot. It runs the trained models in real-time. It must be power-efficient and fast.
+
+### 3. The Body (Actuation)
+**Hardware:** Unitree Go2 or G1 Humanoid.
+The physical structure, motors, and sensors.
+
+<Card className="my-6 border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20">
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      💰 Lab Cost Reality
+    </CardTitle>
+    <CardDescription>Comparing infrastructure costs</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Setup Type</TableHead>
+          <TableHead>Components</TableHead>
+          <TableHead>Est. Cost</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell className="font-medium">Cloud Lab</TableCell>
+          <TableCell>AWS g5.2xlarge (per year)</TableCell>
+          <TableCell>$3,000+ / yr</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell className="font-medium">Home Lab</TableCell>
+          <TableCell>RTX 4070 Ti Workstation + Jetson Orin Nano</TableCell>
+          <TableCell>~$2,500 (One time)</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+    <p className="text-sm text-muted-foreground mt-4">
+      Building a home lab is often more cost-effective for long-term learning than renting cloud GPUs.
+    </p>
+  </CardContent>
+</Card>
+
+## 3. The Senses: How Robots "Feel"
+
+Just as we need eyes and ears, robots need sensor systems to understand their environment.
+
+### LiDAR: Laser Eyes
+Light Detection and Ranging. LiDAR spins a laser to create a 360-degree map of points (a Point Cloud). It is precise but often colorless.
+
+### Depth Cameras: RGB + D
+Devices like the Intel RealSense provide both color (RGB) and Distance (D). This allows the robot to recognize objects ("That is a cup") and know how far away they are ("It is 1.5 meters away").
+
+### IMU: The Inner Ear
+The Inertial Measurement Unit (IMU) contains accelerometers and gyroscopes. It tells the robot:
+*   "Am I falling?" (Orientation)
+*   "How fast am I turning?" (Angular Velocity)
+
+For humanoids, the IMU is critical for balance.
+
+### Proprioception
+Force and torque sensors in the joints allow the robot to "feel" the ground and the resistance of objects.
+
+---
+
+**Next:** Now that we understand the hardware, let's explore the software nervous system that connects it all: **ROS 2**.

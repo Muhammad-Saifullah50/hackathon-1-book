@@ -1,0 +1,60 @@
+---
+title: The Autonomous Humanoid
+sidebar_label: 4. Final Capstone
+id: final-capstone
+description: Module 4 Capstone Project - The Butler Bot Simulation.
+custom_edit_url: null
+experience_level: Advanced
+---
+
+# The Grand Capstone: The Autonomous Humanoid
+
+<div className="hero shadow-lg rounded-lg p-6 mb-8 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-gray-800 dark:to-gray-900 border border-teal-100 dark:border-gray-700">
+  <h2 className="text-2xl font-bold mb-4">The Robot That Listens and Thinks</h2>
+  <p className="text-lg">
+    This is it! The culmination of your journey through Physical AI and Robotics. You will integrate everything you've learned to create a fully autonomous humanoid robot in simulation, capable of understanding and executing complex natural language commands.
+  </p>
+</div>
+
+## Assignment: The "Butler Bot" Simulation
+
+**Goal:** Create a simulated humanoid robot ("Butler Bot") that can understand a natural language command, plan a sequence of actions, and execute them in a simulated environment to achieve a goal.
+
+### Scenario
+
+Imagine your humanoid robot in a simulated apartment environment. A user gives a high-level command. Your robot must process this command and perform the necessary steps.
+
+1.  **Environment**: A simulated apartment in Isaac Sim or Gazebo (choose your preferred simulator). This environment should contain multiple rooms (e.g., kitchen, living room) and various objects (e.g., a red apple, a cup).
+2.  **Input**: The user speaks a command, for example:
+    *   "Go to the kitchen and find the red apple."
+    *   "Bring me the coffee from the table."
+    *   "Clean up the trash in the living room."
+3.  **Process**:
+    *   **`Voice Node`**: Captures the audio and transcribes the command into a text string (using Whisper).
+    *   **`Planner Node`**: Receives the text command, uses an LLM to parse the intent, identifies key entities (e.g., "Kitchen," "Red Apple"), and translates them into a sequence of specific robot actions (JSON commands).
+    *   **`Nav Node`**: Receives navigation actions (e.g., "go_to(kitchen)") and safely navigates the robot to the specified zone.
+    *   **`Vision Node`**: Receives perception actions (e.g., "find(red_apple)") and uses simulated vision (e.g., camera data from Isaac Sim) to identify and locate the target object.
+    *   **(Optional) `Manipulation Node`**: If the command involves grasping, this node executes the necessary inverse kinematics and gripper commands.
+
+### Deliverable
+
+A video recording (2-3 minutes) of your "Butler Bot" successfully performing at least one complex natural language command within the simulated environment. The video should demonstrate the robot's perception, planning, and execution capabilities.
+
+### Assessment Rubric
+
+Your "Butler Bot" simulation will be assessed on the following criteria:
+
+*   **Functional Correctness (50 pts)**:
+    *   Does the robot successfully reach the target location(s)?
+    *   Does it interact with objects as intended (e.g., identifying the correct object)?
+    *   Does it avoid obstacles and navigate safely?
+*   **Cognitive Planning (25 pts)**:
+    *   Did the `Planner Node` correctly parse the human intent and generate an appropriate sequence of robot actions (JSON commands)?
+    *   Is the LLM's prompt engineering robust enough to handle variations in natural language?
+*   **Code Quality & Modularity (25 pts)**:
+    *   Are the ROS 2 nodes well-structured, modular, and adhere to best practices?
+    *   Is the code readable, maintainable, and adequately commented?
+
+---
+
+**Congratulations! You have completed the book!** You are now equipped with the knowledge and skills to build sophisticated Physical AI and Robotics applications. Go forth and innovate!

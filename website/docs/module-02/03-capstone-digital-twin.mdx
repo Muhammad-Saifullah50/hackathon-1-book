@@ -1,0 +1,115 @@
+---
+title: "Capstone: The Virtual Obstacle Course"
+sidebar_label: 3. Capstone Project
+id: capstone-digital-twin
+description: Module 2 Capstone Project - Building a complete digital twin simulation.
+custom_edit_url: null
+experience_level: Advanced
+---
+
+# Capstone Project: The Virtual Obstacle Course
+
+<div className="hero shadow-lg rounded-lg p-6 mb-8 bg-gradient-to-r from-red-50 to-orange-50 dark:from-gray-800 dark:to-gray-900 border border-red-100 dark:border-gray-700">
+  <h2 className="text-2xl font-bold mb-4">Your First Digital Twin Playground</h2>
+  <p className="text-lg">
+    It's time to bring together everything you've learned about Gazebo and URDF/SDF. You will create a complete simulated environment for your robot, equip it with virtual sensors, and ensure it's ready for testing.
+  </p>
+</div>
+
+## Assignment
+
+**Goal:** Build a complete simulation environment in Gazebo for a "Blind Walker" robot, including an obstacle course and a simulated LiDAR sensor.
+
+### Requirements
+
+1.  **Custom World File:** Create a simple Gazebo world file (e.g., `obstacle_world.world` or `.sdf`) that includes:
+    *   Ground plane.
+    *   Walls defining a simple room.
+    *   At least three basic obstacles (cubes, cylinders) within the room.
+2.  **Spawn the "Blind Walker" Robot:** Integrate the "Blind Walker" robot (or a similar simple mobile robot from Module 1) into your Gazebo world.
+3.  **Simulated LiDAR Sensor:** Equip your robot with a simulated LiDAR sensor, configured to publish `sensor_msgs/LaserScan` data.
+
+### Assessment Logic
+
+The primary assessment is whether your simulated robot can successfully publish LiDAR data to a ROS 2 topic within the Gazebo environment.
+
+### Validation
+
+To validate your setup:
+
+1.  **Launch your simulation:**
+    ```bash
+    ros2 launch my_robot_pkg my_sim_launch.py
+    ```
+    (Where `my_robot_pkg` is your ROS 2 package and `my_sim_launch.py` is your launch file.)
+
+2.  **Verify LiDAR data:** Open a new terminal and echo the LiDAR topic:
+    ```bash
+    ros2 topic echo /scan
+    ```
+    You should see a continuous stream of `sensor_msgs/LaserScan` messages, indicating your simulated sensor is working correctly.
+
+## Code/Config: Spawning a Robot in Gazebo
+
+The Launch file structure for spawning a robot in Gazebo is crucial for repeatable simulations.
+
+**ROS 2 Launch File Snippet (from `context7`: /gazebosim/docs)**:
+```python
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration, TextSubstitution
+from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+import os
+
+def generate_launch_description():
+    # Path to your robot's URDF/SDF file
+    robot_description_path = os.path.join(
+        get_package_share_directory('my_robot_pkg'),
+        'urdf',
+        'my_robot.urdf' # Or .sdf if you're using SDF directly
+    )
+
+    # Path to your custom world file
+    world_path = os.path.join(
+        get_package_share_directory('my_robot_pkg'),
+        'worlds',
+        'obstacle_world.world'
+    )
+
+    return LaunchDescription([
+        # Launch Gazebo
+        ExecuteProcess(
+            cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world_path],
+            output='screen'
+        ),
+
+        # Spawn the robot into Gazebo
+        Node(
+            package='ros_gz_sim',
+            executable='create',
+            arguments=[
+                '-name', 'my_robot',
+                '-x', '0', '-y', '0', '-z', '0',
+                '-topic', '/robot_description'
+            ],
+            output='screen'
+        ),
+
+        # Publish robot description
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[{'robot_description': ParameterValue(
+                Command(['xacro ', robot_description_path]), value_type=str)}
+            ]
+        ),
+    ])
+```
+*(Note: The `create` executable from `ros_gz_sim` is a common way to spawn a model described by a URDF/SDF into Gazebo. The `ExecuteProcess` for launching Gazebo and `robot_state_publisher` are standard for full ROS 2 Gazebo simulation setups.)*
+
+---
+
+**Congratulations!** You have completed Module 2. You now have the foundational skills to build and interact with complex digital twins.

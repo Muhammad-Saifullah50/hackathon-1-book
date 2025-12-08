@@ -1,0 +1,103 @@
+---
+title: "Capstone: The Perception Pipeline"
+sidebar_label: 3. Capstone Project
+id: capstone-perception
+description: Module 3 Capstone Project - Build a follower robot simulation in Isaac Sim.
+custom_edit_url: null
+experience_level: Advanced
+---
+
+# Capstone Project: The Perception Pipeline
+
+<div className="hero shadow-lg rounded-lg p-6 mb-8 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border border-purple-100 dark:border-gray-700">
+  <h2 className="text-2xl font-bold mb-4">Bringing Perception to Life</h2>
+  <p className="text-lg">
+    You've explored photorealistic simulation with Isaac Sim and hardware-accelerated perception with Isaac ROS. Now, it's time to combine these skills to build a functional perception pipeline for a "Follower Robot."
+  </p>
+</div>
+
+## Assignment
+
+**Goal:** Create a "Follower Robot" simulation in Isaac Sim. The robot will use its perception capabilities to detect and follow a moving target within a warehouse environment.
+
+### Scenario
+
+1.  **Load a warehouse environment** in Isaac Sim.
+2.  **Spawn a "Target"**: This could be a simple prim (e.g., a dynamic cube) or a more complex humanoid character that moves around the environment.
+3.  **Implement a perception node**: This node will detect the target's position relative to the robot.
+
+### Requirements
+
+*   **Isaac Sim for the environment**: The entire simulation must run within NVIDIA Isaac Sim.
+*   **Isaac ROS components (or simulated equivalents) for processing**: You should leverage the concepts of Isaac ROS for perception. This might involve directly using Isaac ROS nodes if running a full ROS 2 integration, or implementing similar perception logic within Isaac Sim's Python API to simulate the output of Isaac ROS components.
+
+### Validation
+
+The robot must successfully rotate to face the target as it moves. This demonstrates that its perception pipeline is correctly identifying the target's position and translating that into a desired robot orientation.
+
+## Code/Config: Isaac Sim Camera Control and Ground-Truth Data
+
+**STRICTLY** derive the Python API calls for controlling the Isaac Sim camera and getting ground-truth data from `context7`.
+
+**Python Snippet: Camera Control and Ground-Truth Data (Workstation (Isaac Sim))**
+This snippet shows how to set up a camera in Isaac Sim and retrieve various ground-truth data, which is essential for developing and validating perception algorithms for your follower robot.
+
+```python
+# From context7: /isaac-sim/isaacsim (isaacsim.sensors.camera, omni.kit.viewport.utility, omni.replicator.core)
+
+from isaacsim.sensors.camera import Camera
+from omni.kit.viewport.utility import get_active_viewport
+import omni.replicator.core as rep
+import numpy as np
+import omni.timeline
+import omni.usd
+from omni.isaac.core import World
+from omni.isaac.core.utils.prims import create_prim
+
+# Assume simulation_app and world are initialized
+# simulation_app = SimulationApp({"headless": False})
+# world = World(stage_units_in_meters=1.0)
+# world.scene.add_default_ground_plane()
+# world.reset()
+
+# Get the active viewport for camera rendering
+viewport_api = get_active_viewport()
+render_product_path = viewport_api.get_render_product_path()
+
+# Create and configure a camera
+camera = Camera(
+    prim_path="/World/MyCamera", # Unique path for the camera prim
+    position=np.array([0.0, 0.0, 2.0]), # Example position
+    resolution=(640, 480),
+    orientation=np.array([0.5, 0.5, 0.5, 0.5]), # Example orientation (quaternion)
+    render_product_path = render_product_path
+)
+camera.initialize() # Initialize the camera
+
+# Add various annotators to get ground-truth data
+camera.add_distance_to_image_plane_to_frame() # Depth data
+camera.add_bounding_box_2d_tight_to_frame() # 2D bounding boxes
+camera.add_instance_segmentation_to_frame() # Instance segmentation masks
+camera.add_semantic_segmentation_to_frame() # Semantic segmentation masks
+camera.add_bounding_box_3d_to_frame() # 3D bounding boxes
+
+# Example: Get ground truth data after a simulation step
+# timeline = omni.timeline.get_timeline_interface()
+# timeline.play()
+# world.step(render=True) # Advance simulation by one step
+# timeline.pause()
+
+# Retrieve data
+rgb_data = camera.get_rgba()
+depth_data = camera.get_distance_to_image_plane()
+# semantic_segmentation_data = camera.get_semantic_segmentation()
+# bounding_box_data = camera.get_bounding_box_2d_tight()
+
+print(f"Captured RGB data shape: {rgb_data.shape}")
+print(f"Captured Depth data shape: {depth_data.shape}")
+# You would save this data to disk for training or analysis
+```
+
+---
+
+**Congratulations!** You have completed Module 3. You've navigated the complexities of NVIDIA Isaac Sim and Isaac ROS to build intelligent robot perception pipelines.

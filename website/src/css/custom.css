@@ -29,6 +29,17 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+
+    /* Sync Docusaurus theme with Tailwind */
+    --ifm-background-color: hsl(var(--background));
+    --ifm-navbar-background-color: hsl(var(--background));
+    --ifm-color-primary: hsl(var(--primary));
+    --ifm-color-primary-dark: hsl(var(--primary));
+    --ifm-color-primary-darker: hsl(var(--primary));
+    --ifm-color-primary-darkest: hsl(var(--primary));
+    --ifm-color-primary-light: hsl(var(--primary));
+    --ifm-color-primary-lighter: hsl(var(--primary));
+    --ifm-color-primary-lightest: hsl(var(--primary));
   }
 
   [data-theme="dark"] {
@@ -56,6 +67,11 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* Sync Docusaurus theme with Tailwind */
+    --ifm-background-color: hsl(var(--background));
+    --ifm-navbar-background-color: hsl(var(--background));
+    --ifm-color-primary: hsl(var(--primary));
   }
 }
 

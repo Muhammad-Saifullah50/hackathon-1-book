@@ -2,56 +2,84 @@
   {
     "title": "Module 1: Foundations & The Nervous System",
     "weeks": "1-5",
-    "slug": "/module-1",
+    "slug": "/module-01",
     "lessons": [
       {
-        "title": "Introduction to Physical AI",
-        "slug": "/module-1/lesson-1.1"
+        "title": "The Awakening",
+        "slug": "/module-01/embodied-intelligence"
       },
       {
         "title": "ROS 2 Fundamentals",
-        "slug": "/module-1/lesson-1.2"
+        "slug": "/module-01/ros2-fundamentals"
+      },
+      {
+        "title": "Anatomy of a Humanoid",
+        "slug": "/module-01/urdf-and-tf"
+      },
+      {
+        "title": "Capstone: The Blind Walker",
+        "slug": "/module-01/capstone-project"
       }
     ]
   },
   {
     "title": "Module 2: The Digital Twin",
     "weeks": "6-7",
-    "slug": "/module-2",
+    "slug": "/module-02",
     "lessons": [
       {
-        "title": "Gazebo & Physics",
-        "slug": "/module-2/lesson-2.1"
+        "title": "The Physics Engine (Gazebo)",
+        "slug": "/module-02/gazebo-physics"
       },
       {
-        "title": "Visualization with Unity",
-        "slug": "/module-2/lesson-2.2"
+        "title": "High-Fidelity Rendering (Unity)",
+        "slug": "/module-02/unity-integration"
+      },
+      {
+        "title": "Capstone: The Virtual Obstacle Course",
+        "slug": "/module-02/capstone-digital-twin"
       }
     ]
   },
   {
     "title": "Module 3: The AI-Robot Brain",
     "weeks": "8-10",
-    "slug": "/module-3",
+    "slug": "/module-03",
     "lessons": [
       {
-        "title": "The NVIDIA Isaac Platform",
-        "slug": "/module-3/lesson-3.1"
+        "title": "Photorealistic Simulation (Isaac Sim)",
+        "slug": "/module-03/isaac-sim-setup"
+      },
+      {
+        "title": "Hardware-Accelerated Perception (Isaac ROS)",
+        "slug": "/module-03/isaac-ros-gems"
+      },
+      {
+        "title": "Capstone: The Perception Pipeline",
+        "slug": "/module-03/capstone-perception"
       }
     ]
   },
   {
-    "title": "Module 4: Embodied Intelligence & VLA",
+    "title": "Module 4: Vision-Language-Action (VLA)",
     "weeks": "11-13",
-    "slug": "/module-4",
+    "slug": "/module-04",
     "lessons": [
       {
-        "title": "Humanoid Mechanics",
-        "slug": "/module-4/lesson-4.1"
+        "title": "The Voice Interface (Ears)",
+        "slug": "/module-04/voice-to-action"
       },
       {
-        "title": "Vision-Language-Action",
-        "slug": "/module-4/lesson-4.2"
+        "title": "Cognitive Planning (The Brain)",
+        "slug": "/module-04/cognitive-planning"
+      },
+      {
+        "title": "Humanoid Mechanics (The Body)",
+        "slug": "/module-04/humanoid-mechanics"
+      },
+      {
+        "title": "The Autonomous Humanoid",
+        "slug": "/module-04/final-capstone"
       }
     ]
   }

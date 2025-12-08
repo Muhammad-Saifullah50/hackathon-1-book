@@ -1,0 +1,122 @@
+---
+title: Humanoid Mechanics (The Body)
+sidebar_label: 3. Humanoid Mechanics
+id: humanoid-mechanics
+description: Understanding bipedal locomotion, balance, and manipulation for humanoid robots.
+custom_edit_url: null
+experience_level: Advanced
+---
+
+# Humanoid Mechanics: The Body
+
+<div className="hero shadow-lg rounded-lg p-6 mb-8 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 border border-purple-100 dark:border-gray-700">
+  <h2 className="text-2xl font-bold mb-4">Why Walking is Harder Than Rolling</h2>
+  <p className="text-lg">
+    We take walking for granted, but for a robot, it's a monumental feat of engineering and control. This chapter dives into the unique challenges of humanoid locomotion, balance, and dexterous manipulation.
+  </p>
+</div>
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+-   Explain the fundamental challenges of bipedal locomotion.
+-   Understand the concept of the "Inverted Pendulum" model for walking.
+-   Grasp the principle of Zero Moment Point (ZMP) for dynamic balance.
+-   Understand Inverse Kinematics (IK) for precise robotic manipulation.
+
+## 1. Bipedal Locomotion
+
+Wheeled robots are efficient, but humanoids are designed to navigate complex, human-centric environments. The challenge? Walking.
+
+### The "Inverted Pendulum" Model
+
+Think of a person standing on one leg. Their body acts like an **inverted pendulum**, inherently unstable. To walk, we constantly shift our center of gravity and fall forward, catching ourselves with the other leg. Robots employ similar strategies.
+
+This model simplifies the complex dynamics of walking, allowing control engineers to design algorithms that predict and manage the robot's stability.
+
+### Balance: Zero Moment Point (ZMP)
+
+The **Zero Moment Point (ZMP)** is a crucial concept for dynamic balance in bipedal robots. Simply put, it's the point on the ground where the total moment (torque) of all forces acting on the robot is zero.
+
+*   If the ZMP stays within the robot's support polygon (the area defined by its feet on the ground), the robot will remain stable.
+*   If the ZMP moves outside this area, the robot will fall.
+
+Robot control systems constantly calculate and adjust joint angles to keep the ZMP within the stability region during walking or standing.
+
+### Hardware Focus: Unitree G1
+
+The **Unitree G1** is an example of a compact humanoid robot that faces these very challenges. Its design (e.g., foot size, leg length, joint configurations) directly impacts its stability and the complexity of its locomotion algorithms. Understanding its kinematic structure (how its joints move to achieve a desired pose) is fundamental to programming it.
+
+## 2. Manipulation
+
+Beyond walking, humanoids are often designed to interact with objects. This requires precise control over their arms and hands.
+
+### Grasping Objects
+
+Grasping an object is a complex task involving:
+*   **Perception**: Identifying the object and its pose (position and orientation).
+*   **Planning**: Determining the best way to approach and grasp the object without collision.
+*   **Control**: Executing the precise movements of the arm and fingers.
+
+### Sim-to-Real: Inverse Kinematics (IK)
+
+Moving a robot's hand to a specific coordinate often uses **Inverse Kinematics (IK)**. Instead of specifying every joint angle (Forward Kinematics), you tell the robot the desired end-effector (hand) position and orientation, and the IK solver calculates the required joint angles.
+
+This is a critical **Sim-to-Real** concept. You can design and test complex grasping sequences in simulation, then transfer the IK solutions to the real robot.
+
+**Python Example: Inverse Kinematics with IKPy (Workstation/Edge)**
+
+`IKPy` is a Python library for solving Inverse Kinematics problems for robotic manipulators.
+
+```python
+# From context7: /phylliade/ikpy
+import ikpy.chain
+import numpy as np
+
+# Example: Define a kinematic chain from a URDF file
+# (Replace 'my_robot.urdf' with your robot's URDF file)
+# This example assumes a simple 6-DOF arm or similar.
+# The 'base_elements' define the root link(s) for the chain.
+# For a full humanoid, you might define multiple chains (e.g., for each arm).
+my_chain = ikpy.chain.Chain.from_urdf_file("my_robot.urdf", base_elements=["base_link"])
+
+print("Number of links in chain:", len(my_chain.links))
+print("Number of active joints:", len(my_chain.active_links_mask))
+
+# Target end-effector position and orientation
+target_position = [0.1, 0.2, 0.3] # X, Y, Z coordinates
+# Example target orientation (rotation matrix)
+target_orientation = np.array([
+    [0, 0, 1],
+    [0, 1, 0],
+    [-1, 0, 0],
+])
+
+# Calculate inverse kinematics
+# initial_position: An array of joint angles (radians) to start the IK search from.
+#     A common choice is to start from the home/zero position of the robot.
+initial_position = [0] * len(my_chain.links) 
+# The actual number of active joints is what IKPy expects
+initial_position[0] = 0 # Example, for revolute joints
+initial_position[1] = 0 # Example, for prismatic joints
+
+
+# Solve IK
+# This function returns the joint angles required to reach the target pose.
+# It iteratively searches for a solution, starting from `initial_position`.
+target_joint_angles = my_chain.inverse_kinematics(
+    target_position, 
+    target_orientation=target_orientation, 
+    orientation_mode="all", # Consider both position and orientation
+    initial_position=initial_position
+)
+
+print("Target joint angles (radians):", target_joint_angles)
+
+# You can then use these joint angles to command your robot in simulation or hardware.
+```
+
+---
+
+**Next:** Bring it all together in **The Grand Capstone: The Autonomous Humanoid**!
