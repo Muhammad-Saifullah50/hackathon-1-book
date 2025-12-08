@@ -1,7 +1,7 @@
 # Tasks: The RAG Tutor Agent
 
 **Feature**: The RAG Tutor Agent  
-**Status**: Pending  
+**Status**: Completed  
 **Branch**: `007-rag-tutor-agent`
 
 ## Dependencies
@@ -40,39 +40,39 @@
 
 - [x] T008 [US1] Implement data ingestion script `scripts/ingest_book.py` to chunk `.mdx` files and upload to Qdrant.
 - [x] T009 [US1] Define the RAG tool `query_knowledge_base` using `openai-agents` (`@function_tool`).
-- [ ] T010 [US1] Create the main Agent definition in `backend/agent.py` with instructions and the RAG tool.
-- [ ] T011 [US1] Implement the FastAPI server in `backend/main.py` to expose the agent (and session endpoints for ChatKit).
+- [x] T010 [US1] Create the main Agent definition in `backend/agent.py` with instructions and the RAG tool.
+- [x] T011 [US1] Implement the FastAPI server in `backend/main.py` to expose the agent (and session endpoints for ChatKit).
 
 ## Phase 4: User Story 1 (Global Q&A - Frontend)
 
 **Goal**: Implement the Chat interface.
 **Test**: Verify user can chat with the agent.
 
-- [ ] T012 [US1] Install `openai-chatkit` and `@openai/chatkit-react` in `website/`.
-- [ ] T013 [US1] Create `website/src/components/ChatWidget.tsx` using `<ChatProvider>` and `<Thread />` (or `<ChatKit />`).
-- [ ] T014 [US1] Implement session fetching logic (`getClientSecret`) in `ChatWidget.tsx` to connect to the backend.
-- [ ] T015 [US1] Add the `ChatWidget` to the Docusaurus layout (e.g., via `Root` or a wrapper).
+- [x] T012 [US1] Install `openai-chatkit` and `@openai/chatkit-react` in `website/`.
+- [x] T013 [US1] Create `website/src/components/ChatWidget.tsx` using `<ChatProvider>` and `<Thread />` (or `<ChatKit />`).
+- [x] T014 [US1] Implement session fetching logic (`getClientSecret`) in `ChatWidget.tsx` to connect to the backend.
+- [x] T015 [US1] Add the `ChatWidget` to the Docusaurus layout (e.g., via `Root` or a wrapper).
 
 ## Phase 5: User Story 2 (Contextual Help - "Ask about Selection")
 
 **Goal**: Implement "Explain This" feature for selected text.
 **Test**: Verify selecting text triggers the chat with context.
 
-- [ ] T016 [US2] Create `website/src/components/SelectionPopup.tsx` to handle `selectionchange` events and show a button.
-- [ ] T017 [US2] Implement logic to open the ChatWidget and send a contextual message (e.g., "Explain this: [selection]") when the button is clicked.
+- [x] T016 [US2] Create `website/src/components/SelectionPopup.tsx` to handle `selectionchange` events and show a button.
+- [x] T017 [US2] Implement logic to open the ChatWidget and send a contextual message (e.g., "Explain this: [selection]") when the button is clicked.
 
 ## Phase 6: User Story 3 & 4 (Agent Skills)
 
 **Goal**: Add specific skills for Code Explanation, Debugging, and Sim-to-Real advice.
 **Test**: Verify agent handles code and hardware questions correctly.
 
-- [ ] T018 [US3] Refine Agent instructions in `backend/agent.py` to handle "Code Explanation" and "Sim-to-Real" queries specifically (persona tuning).
-- [ ] T019 [US3] (Optional) Implement `simplify_concept` and `debug_helper` as distinct tools if strictly necessary, or rely on prompt engineering within the main Agent.
+- [x] T018 [US3] Refine Agent instructions in `backend/agent.py` to handle "Code Explanation" and "Sim-to-Real" queries specifically (persona tuning).
+- [x] T019 [US3] (Optional) Implement `simplify_concept` and `debug_helper` as distinct tools if strictly necessary, or rely on prompt engineering within the main Agent.
 
 ## Phase 7: Polish
 
 **Goal**: Final styling and cleanup.
 
-- [ ] T020 Style the ChatWidget to match the Docusaurus theme (Tailwind).
-- [ ] T021 Ensure citations (links to source modules) are correctly formatted by the Agent (prompt engineering).
-- [ ] T022 Verify mobile responsiveness of the chat widget.
+- [x] T020 Style the ChatWidget to match the Docusaurus theme (Tailwind).
+- [x] T021 Ensure citations (links to source modules) are correctly formatted by the Agent (prompt engineering).
+- [x] T022 Verify mobile responsiveness of the chat widget.

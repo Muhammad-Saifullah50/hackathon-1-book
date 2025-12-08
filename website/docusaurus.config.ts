@@ -73,6 +73,12 @@ const config: Config = {
     ],
   ],
 
+  scripts: [
+    {
+      src: 'https://cdn.platform.openai.com/deployments/chatkit/chatkit.js',
+      async: true,
+    },
+  ],
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
