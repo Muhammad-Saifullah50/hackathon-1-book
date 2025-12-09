@@ -208,3 +208,10 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Active Technologies
+- Python (backend), TypeScript/JavaScript (frontend) + `better-auth` (authentication), `Supabase` (database), `Shadcn UI` (UI components), `Zod` (validation), `React` (frontend framework) (008-learner-auth-profile)
+- PostgreSQL (via Supabase) (008-learner-auth-profile)
+
+## Recent Changes
+- 008-learner-auth-profile: Added Python (backend), TypeScript/JavaScript (frontend) + `better-auth` (authentication), `Supabase` (database), `Shadcn UI` (UI components), `Zod` (validation), `React` (frontend framework)

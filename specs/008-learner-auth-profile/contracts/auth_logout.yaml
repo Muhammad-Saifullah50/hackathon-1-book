@@ -1,0 +1,24 @@
+openapi: 3.0.0
+info:
+  title: Authentication API
+  version: 1.0.0
+paths:
+  /auth/logout:
+    post:
+      summary: Log out the current user
+      responses:
+        '200':
+          description: User successfully logged out
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: "session_id=deleted; HttpOnly; Path=/; Max-Age=0"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout successful
