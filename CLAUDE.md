@@ -208,3 +208,10 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Active Technologies
+- TypeScript 5.6, React 19.0, Node.js 20+ (009-dark-mode-landing-page)
+- N/A (static landing page) (009-dark-mode-landing-page)
+
+## Recent Changes
+- 009-dark-mode-landing-page: Added TypeScript 5.6, React 19.0, Node.js 20+

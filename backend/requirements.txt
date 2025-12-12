@@ -6,3 +6,6 @@ google-genai
 python-dotenv
 python-frontmatter
 openai-chatkit
+supabase
+pytest
+pytest-asyncio

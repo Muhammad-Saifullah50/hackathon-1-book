@@ -6,7 +6,12 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "jsx": "react-jsx", // Explicitly set JSX factory
+    "moduleResolution": "node", // Ensure Node.js-style module resolution
+    "esModuleInterop": true, // Allows default imports from modules with no default export
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
+    "allowImportingTsExtensions": true // Allow importing .ts and .tsx files with extensions
   },
   "exclude": [".docusaurus", "build"]
 }

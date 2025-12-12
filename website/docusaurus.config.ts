@@ -10,6 +10,11 @@ const config: Config = {
   tagline: 'Embodied Intelligence',
   favicon: 'img/favicon.ico',
 
+  // Custom fields to expose to client-side code
+  customFields: {
+    backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000',
+  },
+
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
@@ -42,12 +47,13 @@ const config: Config = {
   themes: ['@docusaurus/theme-mermaid'],
   plugins: [
     tailwindPlugin, 
-    [
-      require.resolve("@easyops-cn/docusaurus-search-local"),
-      {
-        hashed: true,
-      },
-    ],
+    // Commented out the search plugin for debugging
+    // [
+    //   require.resolve("@easyops-cn/docusaurus-search-local"),
+    //   {
+    //     hashed: true,
+    //   },
+    // ],
   ],
 
   presets: [
@@ -94,8 +100,7 @@ const config: Config = {
       },
       items: [
         {
-          href: 'https://github.com/facebook/docusaurus',
-          label: 'GitHub',
+          type: 'custom-auth',
           position: 'right',
         },
       ],

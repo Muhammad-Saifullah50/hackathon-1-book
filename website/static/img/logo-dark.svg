@@ -1,1 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="24" cy="24" r="22" fill="#0f172a" stroke="#34d399" stroke-width="2"/>
+
+  <!-- Robot head outline -->
+  <rect x="14" y="12" width="20" height="18" rx="4" fill="#34d399" fill-opacity="0.15" stroke="#34d399" stroke-width="2"/>
+
+  <!-- Robot eyes -->
+  <circle cx="19" cy="20" r="3" fill="#34d399"/>
+  <circle cx="29" cy="20" r="3" fill="#34d399"/>
+
+  <!-- Eye highlights -->
+  <circle cx="18" cy="19" r="1" fill="white" fill-opacity="0.8"/>
+  <circle cx="28" cy="19" r="1" fill="white" fill-opacity="0.8"/>
+
+  <!-- Robot mouth/smile -->
+  <path d="M18 26 C20 28, 28 28, 30 26" stroke="#34d399" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+  <!-- Antenna -->
+  <line x1="24" y1="12" x2="24" y2="6" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="24" cy="5" r="2" fill="#fbbf24"/>
+
+  <!-- Neural network dots -->
+  <circle cx="10" cy="24" r="1.5" fill="#fbbf24" fill-opacity="0.6"/>
+  <circle cx="38" cy="24" r="1.5" fill="#fbbf24" fill-opacity="0.6"/>
+  <circle cx="24" cy="38" r="1.5" fill="#fbbf24" fill-opacity="0.6"/>
+
+  <!-- Connection lines -->
+  <line x1="12" y1="24" x2="14" y2="21" stroke="#fbbf24" stroke-width="1" stroke-opacity="0.4"/>
+  <line x1="36" y1="24" x2="34" y2="21" stroke="#fbbf24" stroke-width="1" stroke-opacity="0.4"/>
+  <line x1="24" y1="36" x2="24" y2="30" stroke="#fbbf24" stroke-width="1" stroke-opacity="0.4"/>
+</svg>

@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none">
+  <!-- Glow filter for premium tech effect -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="emeraldAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#34d399"/>
+      <stop offset="100%" style="stop-color:#fbbf24"/>
+    </linearGradient>
+    <linearGradient id="emeraldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#34d399"/>
+      <stop offset="100%" style="stop-color:#10b981"/>
+    </linearGradient>
+    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+    <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#334155"/>
+      <stop offset="50%" style="stop-color:#1e293b"/>
+      <stop offset="100%" style="stop-color:#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background glow -->
+  <ellipse cx="200" cy="250" rx="150" ry="200" fill="url(#emeraldAmber)" opacity="0.08"/>
+
+  <!-- Robot Head -->
+  <rect x="120" y="60" width="160" height="120" rx="20" fill="url(#bodyGradient)" stroke="#34d399" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Head accent line -->
+  <line x1="130" y1="75" x2="270" y2="75" stroke="#34d399" stroke-width="1" opacity="0.3"/>
+
+  <!-- Visor/Eyes -->
+  <rect x="140" y="90" width="120" height="40" rx="10" fill="#020617" stroke="#34d399" stroke-width="1.5"/>
+  <!-- Left eye -->
+  <circle cx="170" cy="110" r="12" fill="#34d399" filter="url(#glow)">
+    <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Right eye -->
+  <circle cx="230" cy="110" r="12" fill="#34d399" filter="url(#glow)">
+    <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
+  <!-- Eye inner highlights -->
+  <circle cx="166" cy="106" r="4" fill="#ffffff" opacity="0.4"/>
+  <circle cx="226" cy="106" r="4" fill="#ffffff" opacity="0.4"/>
+
+  <!-- Antenna -->
+  <line x1="200" y1="60" x2="200" y2="30" stroke="#64748b" stroke-width="3"/>
+  <circle cx="200" cy="25" r="8" fill="#fbbf24" filter="url(#glow)">
+    <animate attributeName="fill" values="#fbbf24;#34d399;#fbbf24" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Antenna ring -->
+  <circle cx="200" cy="25" r="12" fill="none" stroke="#fbbf24" stroke-width="1" opacity="0.3"/>
+
+  <!-- Neck -->
+  <rect x="175" y="180" width="50" height="30" fill="url(#bodyGradient)" stroke="#475569" stroke-width="1"/>
+  <!-- Neck details -->
+  <line x1="180" y1="190" x2="220" y2="190" stroke="#34d399" stroke-width="1" opacity="0.3"/>
+  <line x1="180" y1="200" x2="220" y2="200" stroke="#34d399" stroke-width="1" opacity="0.3"/>
+
+  <!-- Torso -->
+  <path d="M100 210 L300 210 L280 350 L120 350 Z" fill="url(#bodyGradient)" stroke="#34d399" stroke-width="2" filter="url(#glow)"/>
+
+  <!-- Chest Core -->
+  <circle cx="200" cy="280" r="35" fill="#020617" stroke="#fbbf24" stroke-width="2"/>
+  <circle cx="200" cy="280" r="25" fill="url(#emeraldAmber)" opacity="0.8" filter="url(#softGlow)">
+    <animate attributeName="r" values="25;28;25" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Core inner ring -->
+  <circle cx="200" cy="280" r="15" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+
+  <!-- Chest Details -->
+  <rect x="140" y="230" width="30" height="8" rx="4" fill="#475569"/>
+  <rect x="230" y="230" width="30" height="8" rx="4" fill="#475569"/>
+  <!-- Chest accent lights -->
+  <circle cx="155" cy="234" r="2" fill="#34d399" opacity="0.8"/>
+  <circle cx="245" cy="234" r="2" fill="#34d399" opacity="0.8"/>
+
+  <!-- Left Arm -->
+  <rect x="60" y="220" width="35" height="80" rx="10" fill="url(#bodyGradient)" stroke="#34d399" stroke-width="1.5"/>
+  <!-- Left arm joint -->
+  <circle cx="77" cy="225" r="8" fill="#1e293b" stroke="#fbbf24" stroke-width="1"/>
+  <rect x="55" y="305" width="45" height="70" rx="8" fill="url(#bodyGradient)" stroke="#475569" stroke-width="1"/>
+  <!-- Left hand -->
+  <ellipse cx="77" cy="385" rx="25" ry="15" fill="url(#bodyGradient)" stroke="#34d399" stroke-width="1.5"/>
+
+  <!-- Right Arm -->
+  <rect x="305" y="220" width="35" height="80" rx="10" fill="url(#bodyGradient)" stroke="#34d399" stroke-width="1.5"/>
+  <!-- Right arm joint -->
+  <circle cx="323" cy="225" r="8" fill="#1e293b" stroke="#fbbf24" stroke-width="1"/>
+  <rect x="300" y="305" width="45" height="70" rx="8" fill="url(#bodyGradient)" stroke="#475569" stroke-width="1"/>
+  <!-- Right hand -->
+  <ellipse cx="323" cy="385" rx="25" ry="15" fill="url(#bodyGradient)" stroke="#34d399" stroke-width="1.5"/>
+
+  <!-- Waist -->
+  <rect x="140" y="350" width="120" height="25" rx="5" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+  <!-- Waist accent -->
+  <line x1="150" y1="362" x2="250" y2="362" stroke="#fbbf24" stroke-width="1" opacity="0.4"/>
+
+  <!-- Left Leg -->
+  <rect x="140" y="375" width="45" height="70" rx="8" fill="url(#bodyGradient)" stroke="#34d399" stroke-width="1.5"/>
+  <!-- Left knee joint -->
+  <circle cx="162" cy="420" r="6" fill="#1e293b" stroke="#fbbf24" stroke-width="1"/>
+  <!-- Left foot -->
+  <rect x="135" y="450" width="55" height="30" rx="6" fill="url(#bodyGradient)" stroke="#fbbf24" stroke-width="1.5"/>
+
+  <!-- Right Leg -->
+  <rect x="215" y="375" width="45" height="70" rx="8" fill="url(#bodyGradient)" stroke="#34d399" stroke-width="1.5"/>
+  <!-- Right knee joint -->
+  <circle cx="237" cy="420" r="6" fill="#1e293b" stroke="#fbbf24" stroke-width="1"/>
+  <!-- Right foot -->
+  <rect x="210" y="450" width="55" height="30" rx="6" fill="url(#bodyGradient)" stroke="#fbbf24" stroke-width="1.5"/>
+
+  <!-- Circuit lines decoration -->
+  <path d="M150 260 L130 260 L130 320 L150 320" stroke="#34d399" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M250 260 L270 260 L270 320 L250 320" stroke="#34d399" stroke-width="1" fill="none" opacity="0.4"/>
+
+  <!-- Additional circuit details -->
+  <circle cx="130" cy="290" r="3" fill="#fbbf24" opacity="0.6"/>
+  <circle cx="270" cy="290" r="3" fill="#fbbf24" opacity="0.6"/>
+</svg>

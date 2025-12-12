@@ -8,4 +8,5 @@ dependencies = [
     "frontmatter>=3.0.8",
     "openai-agents>=0.6.2",
     "openai-chatkit>=1.4.0",
+    "pydantic[email]>=2.12.5",
 ]

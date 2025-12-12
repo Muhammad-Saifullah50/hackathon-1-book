@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Bot } from 'lucide-react';
+import { useSafeColorMode } from '../hooks/useSafeColorMode';
 
 export function SelectionPopup() {
   const [position, setPosition] = useState<{ x: number, y: number } | null>(null);
   const [selectedText, setSelectedText] = useState('');
+  const { isDark } = useSafeColorMode();
 
   useEffect(() => {
     const handleSelection = () => {
       const selection = window.getSelection();
-      
+
       if (!selection || selection.isCollapsed || selection.toString().trim().length === 0) {
         setPosition(null);
         return;
@@ -62,7 +64,11 @@ export function SelectionPopup() {
         top: `${position.y}px`,
         zIndex: 1000
       }}
-      className="flex items-center gap-2 bg-zinc-900 text-white px-3 py-2 rounded-full shadow-lg hover:scale-105 transition-transform animate-in fade-in zoom-in duration-200"
+      className={`flex items-center gap-2 px-4 py-2 rounded-full shadow-xl hover:scale-105 transition-all duration-200 ${
+        isDark
+          ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-emerald-500/30'
+          : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/30'
+      }`}
       onClick={handleClick}
       onMouseDown={(e) => e.preventDefault()} // Prevent button click from clearing selection
     >

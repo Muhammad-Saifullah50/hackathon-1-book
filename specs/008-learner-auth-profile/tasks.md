@@ -21,12 +21,12 @@
 
 **Purpose**: Initialize development environment for backend and frontend, and prepare Supabase.
 
-- [ ] T001 Initialize Supabase local environment as per `specs/008-learner-auth-profile/quickstart.md`.
-- [ ] T002 Create Supabase `profiles` table schema and migration in `supabase/migrations/` as per `specs/008-learner-auth-profile/data-model.md`.
-- [ ] T003 Configure backend `.env` variables in `backend/.env` as per `specs/008-learner-auth-profile/quickstart.md`.
-- [ ] T004 Configure frontend `.env` variables in `website/.env` as per `specs/008-learner-auth-profile/quickstart.md`.
-- [ ] T005 Install Python dependencies in `backend/requirements.txt`.
-- [ ] T006 Install Node.js dependencies in `website/package.json`.
+- [X] T001 Initialize Supabase local environment as per `specs/008-learner-auth-profile/quickstart.md`.
+- [X] T002 Create Supabase `profiles` table schema and migration in `supabase/migrations/` as per `specs/008-learner-auth-profile/data-model.md`.
+- [X] T003 Configure backend `.env` variables in `backend/.env` as per `specs/008-learner-auth-profile/quickstart.md`.
+- [X] T004 Configure frontend `.env` variables in `website/.env` as per `specs/008-learner-auth-profile/quickstart.md`.
+- [X] T005 Install Python dependencies in `backend/requirements.txt`.
+- [X] T006 Install Node.js dependencies in `website/package.json`.
 
 ---
 
@@ -34,24 +34,24 @@
 
 **Purpose**: Implement core authentication services and basic UI elements, enabling user login/signup.
 
-- [ ] T007 [P] Create `backend/src/api/auth/` directory.
-- [ ] T008 [P] Create `backend/src/api/auth/routes.py` for authentication endpoints.
-- [ ] T009 [P] Create `backend/src/services/auth_service.py` file.
-- [ ] T010 [P] Create unit tests for `auth_service.py` in `backend/tests/unit/services/test_auth_service.py`.
-- [ ] T011 Implement `auth_service.py` for user registration, login, logout.
-- [ ] T012 Implement `POST /auth/signup` endpoint in `backend/src/api/auth/routes.py` (referencing `specs/008-learner-auth-profile/contracts/auth_signup.yaml`).
-- [ ] T013 Implement `POST /auth/login` endpoint in `backend/src/api/auth/routes.py` (referencing `specs/008-learner-auth-profile/contracts/auth_login.yaml`).
-- [ ] T014 Implement `POST /auth/logout` endpoint in `backend/src/api/auth/routes.py` (referencing `specs/008-learner-auth-profile/contracts/auth_logout.yaml`).
-- [ ] T015 Implement `GET /auth/me` endpoint in `backend/src/api/auth/routes.py` (referencing `specs/008-learner-auth-profile/contracts/auth_me.yaml`).
-- [ ] T016 [P] Create integration tests for authentication API in `backend/tests/integration/api/test_auth_api.py`.
-- [ ] T017 [P] Create `website/src/hooks/useAuth.ts` file.
-- [ ] T018 [P] Create unit tests for `useAuth.ts` in `website/tests/unit/hooks/test_useAuth.test.ts`.
-- [ ] T019 Implement `useAuth.ts` hook for managing authentication state.
-- [ ] T020 [P] Create `website/src/components/auth/` directory.
-- [ ] T021 [P] Create `website/src/components/auth/LoginForm.tsx` component.
-- [ ] T022 [P] Create `website/src/components/auth/SignupForm.tsx` component.
-- [ ] T023 [P] Create unit tests for `LoginForm.tsx` in `website/tests/unit/components/auth/LoginForm.test.ts`.
-- [ ] T024 [P] Create unit tests for `SignupForm.tsx` in `website/tests/unit/components/auth/SignupForm.test.ts`.
+- [X] T007 [P] Create `backend/src/api/auth/` directory.
+- [X] T008 [P] Create `backend/src/api/auth/routes.py` for authentication endpoints.
+- [X] T009 [P] Create `backend/src/services/auth_service.py` file.
+- [X] T010 [P] Create unit tests for `auth_service.py` in `backend/tests/unit/services/test_auth_service.py`.
+- [X] T011 Implement `auth_service.py` for user registration, login, logout.
+- [X] T012 Implement `POST /auth/signup` endpoint in `backend/src/api/auth/routes.py` (referencing `specs/008-learner-auth-profile/contracts/auth_signup.yaml`).
+- [X] T013 Implement `POST /auth/login` endpoint in `backend/src/api/auth/routes.py` (referencing `specs/008-learner-auth-profile/contracts/auth_login.yaml`).
+- [X] T014 Implement `POST /auth/logout` endpoint in `backend/src/api/auth/routes.py` (referencing `specs/008-learner-auth-profile/contracts/auth_logout.yaml`).
+- [X] T015 Implement `GET /auth/me` endpoint in `backend/src/api/auth/routes.py` (referencing `specs/008-learner-auth-profile/contracts/auth_me.yaml`).
+- [X] T016 [P] Create integration tests for authentication API in `backend/tests/integration/api/test_auth_api.py`.
+- [X] T017 [P] Create `website/src/hooks/useAuth.ts` file.
+- [X] T018 [P] Create unit tests for `useAuth.ts` in `website/tests/unit/hooks/test_useAuth.test.ts`.
+- [X] T019 Implement `useAuth.ts` hook for managing authentication state.
+- [X] T020 [P] Create `website/src/components/auth/` directory.
+- [X] T021 [P] Create `website/src/components/auth/LoginForm.tsx` component.
+- [X] T022 [P] Create `website/src/components/auth/SignupForm.tsx` component.
+- [X] T023 [P] Create unit tests for `LoginForm.tsx` in `website/tests/unit/components/auth/LoginForm.test.ts`.
+- [X] T024 [P] Create unit tests for `SignupForm.tsx` in `website/tests/unit/components/auth/SignupForm.test.ts`.
 
 ---
 
@@ -63,31 +63,31 @@
 
 ### Implementation for User Story 1
 
-- [ ] T025 [US1] Create `backend/src/models/profile.py` (Pydantic model for User Profile).
-- [ ] T026 [P] [US1] Create unit tests for `profile.py` model validation in `backend/tests/unit/models/test_profile.py`.
-- [ ] T027 [US1] Create `backend/src/api/profile/` directory.
-- [ ] T028 [US1] Create `backend/src/api/profile/routes.py` for profile API endpoints.
-- [ ] T029 [US1] Create `backend/src/services/profile_service.py` file.
-- [ ] T030 [P] [US1] Create unit tests for `profile_service.py` in `backend/tests/unit/services/test_profile_service.py`.
-- [ ] T031 [US1] Implement `profile_service.py` for profile CRUD operations (create, get, update).
-- [ ] T032 Implement `POST /profile` endpoint in `backend/src/api/profile/routes.py` (referencing `specs/008-learner-auth-profile/contracts/profile_crud.yaml`).
-- [ ] T033 Implement `GET /profile` endpoint in `backend/src/api/profile/routes.py` (referencing `specs/008-learner-auth-profile/contracts/profile_crud.yaml`).
-- [ ] T034 [P] [US1] Create integration tests for profile API in `backend/tests/integration/api/test_profile_api.py`.
-- [ ] T035 [US1] Create `website/src/data/profile-schema.ts` (Zod schema for profile validation).
-- [ ] T036 [P] [US1] Create unit tests for `profile-schema.ts` in `website/tests/unit/data/test_profile-schema.test.ts`.
-- [ ] T037 [US1] Create `website/src/hooks/useProfile.ts` file.
-- [ ] T038 [P] [US1] Create unit tests for `useProfile.ts` in `website/tests/unit/hooks/test_useProfile.test.ts`.
-- [ ] T039 [US1] Implement `useProfile.ts` hook for profile data management.
-- [ ] T040 [US1] Create `website/src/pages/signup-wizard/` directory.
-- [ ] T041 [US1] Create `website/src/pages/signup-wizard/index.tsx` page.
-- [ ] T042 [P] [US1] Create `website/src/components/profile/` directory.
-- [ ] T043 [P] [US1] Create `website/src/components/profile/ProfileWizardStep1.tsx` (Basics).
-- [ ] T044 [P] [US1] Create `website/src/components/profile/ProfileWizardStep2.tsx` (Background).
-- [ ] T045 [P] [US1] Create `website/src/components/profile/ProfileWizardStep3.tsx` (Strategy).
-- [ ] T046 [P] [US1] Create unit tests for wizard steps in `website/tests/unit/components/profile/`.
-- [ ] T047 [US1] Implement multi-step wizard logic in `website/src/pages/signup-wizard/index.tsx`.
-- [ ] T048 [US1] Implement "Skip for now" functionality in `website/src/pages/signup-wizard/index.tsx`.
-- [ ] T049 [US1] [P] Create E2E tests for the "Learner Profile" wizard flow in `tests/e2e/profile_wizard.spec.ts`.
+- [X] T025 [US1] Create `backend/src/models/profile.py` (Pydantic model for User Profile).
+- [X] T026 [P] [US1] Create unit tests for `profile.py` model validation in `backend/tests/unit/models/test_profile.py`.
+- [X] T027 [US1] Create `backend/src/api/profile/` directory.
+- [X] T028 [US1] Create `backend/src/api/profile/routes.py` for profile API endpoints.
+- [X] T029 [US1] Create `backend/src/services/profile_service.py` file.
+- [X] T030 [P] [US1] Create unit tests for `profile_service.py` in `backend/tests/unit/services/test_profile_service.py`.
+- [X] T031 [US1] Implement `profile_service.py` for profile CRUD operations (create, get, update).
+- [X] T032 Implement `POST /profile` endpoint in `backend/src/api/profile/routes.py` (referencing `specs/008-learner-auth-profile/contracts/profile_crud.yaml`).
+- [X] T033 Implement `GET /profile` endpoint in `backend/src/api/profile/routes.py` (referencing `specs/008-learner-auth-profile/contracts/profile_crud.yaml`).
+- [X] T034 [P] [US1] Create integration tests for profile API in `backend/tests/integration/api/test_profile_api.py`.
+- [X] T035 [US1] Create `website/src/data/profile-schema.ts` (Zod schema for profile validation).
+- [X] T036 [P] [US1] Create unit tests for `profile-schema.ts` in `website/tests/unit/data/test_profile-schema.test.ts`.
+- [X] T037 [US1] Create `website/src/hooks/useProfile.ts` file.
+- [X] T038 [P] [US1] Create unit tests for `useProfile.ts` in `website/tests/unit/hooks/test_useProfile.test.ts`.
+- [X] T039 [US1] Implement `useProfile.ts` hook for profile data management.
+- [X] T040 [US1] Create `website/src/pages/signup-wizard/` directory.
+- [X] T041 [US1] Create `website/src/pages/signup-wizard/index.tsx` page.
+- [X] T042 [P] [US1] Create `website/src/components/profile/` directory.
+- [X] T043 [P] [US1] Create `website/src/components/profile/ProfileWizardStep1.tsx` (Basics).
+- [X] T044 [P] [US1] Create `website/src/components/profile/ProfileWizardStep2.tsx` (Background).
+- [X] T045 [P] [US1] Create `website/src/components/profile/ProfileWizardStep3.tsx` (Strategy).
+- [X] T046 [P] [US1] Create unit tests for wizard steps in `website/tests/unit/components/profile/`.
+- [X] T047 [US1] Implement multi-step wizard logic in `website/src/pages/signup-wizard/index.tsx`.
+- [X] T048 [US1] Implement "Skip for now" functionality in `website/src/pages/signup-wizard/index.tsx`.
+- [X] T049 [US1] [P] Create E2E tests for the "Learner Profile" wizard flow in `tests/e2e/profile_wizard.spec.ts`.
 
 ---
 
@@ -99,11 +99,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T050 [US2] Create `website/src/components/profile/PersonalizationBar.tsx` component.
-- [ ] T051 [P] [US2] Create unit tests for `PersonalizationBar.tsx` in `website/tests/unit/components/profile/PersonalizationBar.test.ts`.
-- [ ] T052 [US2] Implement `PersonalizationBar.tsx` with click handler.
-- [ ] T053 [US2] Integrate `PersonalizationBar.tsx` into Docusaurus layout (`website/src/theme/Layout/index.tsx`).
-- [ ] T054 [US2] [P] Create E2E tests for the "Personalize" trigger in `tests/e2e/personalization_bar.spec.ts`.
+- [X] T050 [US2] Create `website/src/components/profile/PersonalizationBar.tsx` component.
+- [X] T051 [P] [US2] Create unit tests for `PersonalizationBar.tsx` in `website/tests/unit/components/profile/PersonalizationBar.test.ts`.
+- [X] T052 [US2] Implement `PersonalizationBar.tsx` with click handler.
+- [X] T053 [US2] Integrate `PersonalizationBar.tsx` into Docusaurus layout (`website/src/theme/Layout/index.tsx`).
+- [X] T054 [US2] [P] Create E2E tests for the "Personalize" trigger in `tests/e2e/personalization_bar.spec.ts`.
 
 ---
 
@@ -111,12 +111,12 @@
 
 **Purpose**: Improvements that affect multiple user stories and overall system quality.
 
-- [ ] T055 Implement backend Zod validation in `backend/src/api/profile/routes.py` for profile data.
-- [ ] T056 Implement frontend Zod validation integration in `website/src/pages/signup-wizard/index.tsx` and wizard steps.
-- [ ] T057 Implement clear error handling and user feedback for all API interactions (frontend `useAuth.ts`, `useProfile.ts`).
-- [ ] T058 Display privacy statement (`FR-006`) prominently during signup flow (`website/src/pages/signup-wizard/index.tsx`).
-- [ ] T059 Ensure graceful handling of missing profile data (`Edge Case`) in `website/src/hooks/useProfile.ts` and `PersonalizationBar.tsx`.
-- [ ] T060 Run `quickstart.md` validation.
+- [X] T055 Implement backend Zod validation in `backend/src/api/profile/routes.py` for profile data.
+- [X] T056 Implement frontend Zod validation integration in `website/src/pages/signup-wizard/index.tsx` and wizard steps.
+- [X] T057 Implement clear error handling and user feedback for all API interactions (frontend `useAuth.ts`, `useProfile.ts`).
+- [X] T058 Display privacy statement (`FR-006`) prominently during signup flow (`website/src/pages/signup-wizard/index.tsx`).
+- [X] T059 Ensure graceful handling of missing profile data (`Edge Case`) in `website/src/hooks/useProfile.ts` and `PersonalizationBar.tsx`.
+- [X] T060 Run `quickstart.md` validation.
 
 ---
 

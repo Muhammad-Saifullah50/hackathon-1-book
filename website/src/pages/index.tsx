@@ -1,40 +1,52 @@
-import type {ReactNode} from 'react';
-import clsx from 'clsx';
-import Link from '@docusaurus/Link';
+import type { ReactNode } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import Heading from '@theme/Heading';
+import { useSafeColorMode } from '../hooks/useSafeColorMode';
 
-import styles from './index.module.css';
+import {
+  HeroSection,
+  CurriculumSection,
+  FeaturesSection,
+  LabSection,
+  FooterCTA,
+} from '../components/landing';
 
-function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
+/**
+ * Main content component that uses color mode.
+ */
+function HomeContent() {
+  const { isDark } = useSafeColorMode();
+
   return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <Heading as="h1" className="hero__title">
-          {siteConfig.title}
-        </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/module-01/overview">
-            Start Reading ⏱️
-          </Link>
-        </div>
-      </div>
-    </header>
+    <main className={`min-h-screen ${isDark ? 'bg-slate-950' : 'bg-white'}`}>
+      <HeroSection />
+      <CurriculumSection />
+      <FeaturesSection />
+      <LabSection />
+      <FooterCTA />
+    </main>
   );
 }
 
+/**
+ * Home page component for the Physical AI book website.
+ * Features a modern Emerald + Gold theme with light/dark mode support.
+ * Five main sections:
+ * - Hero: Main headline, CTAs, and robot visual
+ * - Curriculum: Four-card learning journey overview
+ * - Features: AI Tutor and Personalization demos
+ * - Lab: Hardware requirements loadout
+ * - FooterCTA: Final conversion call-to-action
+ */
 export default function Home(): ReactNode {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
+
   return (
     <Layout
       title={`Welcome to ${siteConfig.title}`}
-      description="Learn Physical AI and Robotics with practical examples and deep dives.">
-      <HomepageHeader />
+      description="Learn Physical AI and Robotics with practical examples and deep dives. From Python code to Walking Robots."
+    >
+      <HomeContent />
     </Layout>
   );
 }

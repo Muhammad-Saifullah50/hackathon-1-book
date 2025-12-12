@@ -10,68 +10,81 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 160 84% 39%; /* Emerald-500 */
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
+    --accent: 38 92% 50%; /* Amber-500 */
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 160 84% 39%; /* Emerald-500 */
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
+    --chart-2: 160 58% 45%; /* Emerald */
+    --chart-3: 38 92% 50%; /* Amber */
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
 
-    /* Sync Docusaurus theme with Tailwind */
-    --ifm-background-color: hsl(var(--background));
-    --ifm-navbar-background-color: hsl(var(--background));
-    --ifm-color-primary: hsl(var(--primary));
-    --ifm-color-primary-dark: hsl(var(--primary));
-    --ifm-color-primary-darker: hsl(var(--primary));
-    --ifm-color-primary-darkest: hsl(var(--primary));
-    --ifm-color-primary-light: hsl(var(--primary));
-    --ifm-color-primary-lighter: hsl(var(--primary));
-    --ifm-color-primary-lightest: hsl(var(--primary));
+    /* Sync Docusaurus theme with Tailwind - Emerald primary (Light mode) */
+    --ifm-background-color: #ffffff;
+    --ifm-navbar-background-color: #ffffff;
+    --ifm-footer-background-color: #f8fafc; /* slate-50 */
+    --ifm-color-primary: #059669; /* Emerald-600 */
+    --ifm-color-primary-dark: #047857; /* Emerald-700 */
+    --ifm-color-primary-darker: #065f46; /* Emerald-800 */
+    --ifm-color-primary-darkest: #064e3b; /* Emerald-900 */
+    --ifm-color-primary-light: #10b981; /* Emerald-500 */
+    --ifm-color-primary-lighter: #34d399; /* Emerald-400 */
+    --ifm-color-primary-lightest: #6ee7b7; /* Emerald-300 */
   }
 
   [data-theme="dark"] {
-    --background: 222.2 84% 4.9%;
+    --background: 222 47% 4%; /* slate-950 */
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 222 47% 4%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 222 47% 4%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
+    --primary: 160 84% 39%; /* Emerald-500 */
     --primary-foreground: 222.2 47.4% 11.2%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 38 92% 50%; /* Amber-500 */
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
+    --ring: 160 84% 39%; /* Emerald-500 */
+    --chart-1: 160 70% 50%; /* Emerald */
+    --chart-2: 38 92% 50%; /* Amber */
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
 
-    /* Sync Docusaurus theme with Tailwind */
-    --ifm-background-color: hsl(var(--background));
-    --ifm-navbar-background-color: hsl(var(--background));
-    --ifm-color-primary: hsl(var(--primary));
+    /* Sync Docusaurus theme with Tailwind - Dark mode */
+    --ifm-background-color: #020617; /* slate-950 */
+    --ifm-navbar-background-color: #020617; /* slate-950 - same as page */
+    --ifm-color-primary: #34d399; /* Emerald-400 */
+    --ifm-color-primary-dark: #10b981; /* Emerald-500 */
+    --ifm-color-primary-darker: #059669; /* Emerald-600 */
+    --ifm-color-primary-darkest: #047857; /* Emerald-700 */
+    --ifm-color-primary-light: #6ee7b7; /* Emerald-300 */
+    --ifm-color-primary-lighter: #a7f3d0; /* Emerald-200 */
+    --ifm-color-primary-lightest: #d1fae5; /* Emerald-100 */
+
+    /* Footer dark styling */
+    --ifm-footer-background-color: #020617; /* slate-950 - same as page */
+    --ifm-footer-color: #94a3b8; /* slate-400 */
+    --ifm-footer-link-color: #e2e8f0; /* slate-200 */
+    --ifm-footer-title-color: #f8fafc; /* slate-50 */
   }
 }
 
@@ -105,4 +118,263 @@
   --ifm-alert-background-color: #064e3b;
   --ifm-alert-border-color: #10b981;
   --ifm-alert-foreground-color: #ecfdf5;
+}
+
+/* ========================================
+   LIGHT MODE - Navbar Styling
+   ======================================== */
+
+.navbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0; /* slate-200 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.navbar__link {
+  color: #475569; /* slate-600 */
+  transition: color 0.2s ease;
+}
+
+.navbar__link:hover {
+  color: #059669; /* emerald-600 */
+}
+
+.navbar__link--active {
+  color: #059669; /* emerald-600 */
+}
+
+.navbar__title {
+  color: #0f172a; /* slate-900 */
+  font-weight: 600;
+}
+
+/* ========================================
+   DARK MODE - Navbar Styling
+   ======================================== */
+
+[data-theme='dark'] .navbar {
+  background-color: #020617; /* slate-950 - same as page background */
+  border-bottom: 1px solid rgba(52, 211, 153, 0.1); /* emerald-400/10 */
+  box-shadow: none;
+}
+
+[data-theme='dark'] .navbar__link {
+  color: #cbd5e1; /* slate-300 */
+}
+
+[data-theme='dark'] .navbar__link:hover {
+  color: #34d399; /* emerald-400 */
+}
+
+[data-theme='dark'] .navbar__link--active {
+  color: #34d399; /* emerald-400 */
+}
+
+[data-theme='dark'] .navbar__title {
+  color: #f8fafc; /* slate-50 */
+}
+
+/* Hide default Docusaurus color mode toggle (we use custom one) */
+.navbar__items--right .colorModeToggle_vOvM,
+.navbar__items--right [class*="colorModeToggle"] {
+  display: none;
+}
+
+/* ========================================
+   LIGHT MODE - Footer Styling
+   ======================================== */
+
+.footer {
+  background-color: #f8fafc; /* slate-50 */
+  border-top: 1px solid #e2e8f0; /* slate-200 */
+}
+
+.footer__title {
+  color: #0f172a; /* slate-900 */
+  font-weight: 600;
+}
+
+.footer__link-item {
+  color: #64748b; /* slate-500 */
+  transition: color 0.2s ease;
+}
+
+.footer__link-item:hover {
+  color: #059669; /* emerald-600 */
+  text-decoration: none;
+}
+
+.footer__copyright {
+  color: #94a3b8; /* slate-400 */
+  border-top: 1px solid #e2e8f0; /* slate-200 */
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* ========================================
+   DARK MODE - Footer Styling
+   ======================================== */
+
+[data-theme='dark'] .footer {
+  background-color: #020617; /* slate-950 - same as page background */
+  border-top: 1px solid rgba(52, 211, 153, 0.1); /* emerald-400/10 */
+}
+
+[data-theme='dark'] .footer__title {
+  color: #f8fafc; /* slate-50 */
+}
+
+[data-theme='dark'] .footer__link-item {
+  color: #94a3b8; /* slate-400 */
+}
+
+[data-theme='dark'] .footer__link-item:hover {
+  color: #34d399; /* emerald-400 */
+}
+
+[data-theme='dark'] .footer__copyright {
+  color: #64748b; /* slate-500 */
+  border-top: 1px solid rgba(148, 163, 184, 0.1); /* slate-400/10 */
+}
+
+/* ========================================
+   LIGHT MODE - Sidebar Styling
+   ======================================== */
+
+.menu__link {
+  color: #475569; /* slate-600 */
+}
+
+.menu__link:hover {
+  color: #059669; /* emerald-600 */
+  background-color: #ecfdf5; /* emerald-50 */
+}
+
+.menu__link--active {
+  color: #059669; /* emerald-600 */
+  background-color: #d1fae5; /* emerald-100 */
+  border-left: 3px solid #059669;
+  font-weight: 500;
+}
+
+/* ========================================
+   DARK MODE - Sidebar Styling
+   ======================================== */
+
+[data-theme='dark'] .menu__link {
+  color: #cbd5e1; /* slate-300 */
+}
+
+[data-theme='dark'] .menu__link:hover {
+  color: #34d399; /* emerald-400 */
+  background-color: rgba(52, 211, 153, 0.05); /* emerald-400/5 */
+}
+
+[data-theme='dark'] .menu__link--active {
+  color: #34d399; /* emerald-400 */
+  background-color: rgba(52, 211, 153, 0.1); /* emerald-400/10 */
+  border-left: 3px solid #34d399;
+}
+
+/* ========================================
+   LIGHT MODE - Button Styling
+   ======================================== */
+
+.button--primary {
+  background-color: #059669; /* emerald-600 */
+  border-color: #059669;
+  color: white;
+}
+
+.button--primary:hover {
+  background-color: #047857; /* emerald-700 */
+  border-color: #047857;
+  color: white;
+}
+
+.button--secondary {
+  background-color: transparent;
+  border: 2px solid #cbd5e1; /* slate-300 */
+  color: #475569; /* slate-600 */
+}
+
+.button--secondary:hover {
+  background-color: #f1f5f9; /* slate-100 */
+  border-color: #94a3b8; /* slate-400 */
+  color: #334155; /* slate-700 */
+}
+
+/* ========================================
+   DARK MODE - Button Styling
+   ======================================== */
+
+[data-theme='dark'] .button--primary {
+  background-color: #10b981; /* emerald-500 */
+  border-color: #10b981;
+}
+
+[data-theme='dark'] .button--primary:hover {
+  background-color: #34d399; /* emerald-400 */
+  border-color: #34d399;
+}
+
+[data-theme='dark'] .button--secondary {
+  background-color: transparent;
+  border: 2px solid #475569; /* slate-600 */
+  color: #e2e8f0; /* slate-200 */
+}
+
+[data-theme='dark'] .button--secondary:hover {
+  background-color: rgba(71, 85, 105, 0.3); /* slate-600/30 */
+  border-color: #64748b; /* slate-500 */
+  color: #f8fafc;
+}
+
+/* ========================================
+   LIGHT MODE - Table of Contents
+   ======================================== */
+
+.table-of-contents__link {
+  color: #64748b; /* slate-500 */
+}
+
+.table-of-contents__link:hover {
+  color: #059669; /* emerald-600 */
+}
+
+.table-of-contents__link--active {
+  color: #059669; /* emerald-600 */
+  font-weight: 500;
+}
+
+/* ========================================
+   DARK MODE - Table of Contents
+   ======================================== */
+
+[data-theme='dark'] .table-of-contents__link {
+  color: #94a3b8; /* slate-400 */
+}
+
+[data-theme='dark'] .table-of-contents__link:hover {
+  color: #34d399; /* emerald-400 */
+}
+
+[data-theme='dark'] .table-of-contents__link--active {
+  color: #34d399; /* emerald-400 */
+}
+
+/* ========================================
+   LIGHT MODE - Code Blocks
+   ======================================== */
+
+.prism-code {
+  background-color: #f8fafc !important; /* slate-50 */
+}
+
+/* ========================================
+   DARK MODE - Code Blocks
+   ======================================== */
+
+[data-theme='dark'] .prism-code {
+  background-color: #0f172a !important; /* slate-900 */
 }
