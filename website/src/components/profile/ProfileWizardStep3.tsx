@@ -4,6 +4,13 @@ import { UserProfileUpdate, PrimaryGoalSchema, LearningModeSchema, LearningSpeed
 import { useSafeColorMode } from '../../hooks/useSafeColorMode';
 import { z } from 'zod';
 import { ChevronLeft, AlertCircle, Target, BookOpen, Zap, Clock, CheckCircle } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 
 interface Props {
   onSubmit: (data: Partial<UserProfileUpdate>) => void;
@@ -44,11 +51,9 @@ const ProfileWizardStep3: React.FC<Props> = ({ onSubmit, onBack, initialData }) 
     }
   };
 
-  const selectClassName = `block w-full pl-10 pr-10 py-3 rounded-lg transition-colors appearance-none ${
-    isDark
-      ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-      : 'bg-white border-slate-300 text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-  } border outline-none cursor-pointer`;
+  const formatOption = (option: string) => {
+    return option.replace(/_/g, ' ');
+  };
 
   const inputClassName = `block w-full pl-10 pr-4 py-3 rounded-lg transition-colors ${
     isDark
@@ -109,35 +114,24 @@ const ProfileWizardStep3: React.FC<Props> = ({ onSubmit, onBack, initialData }) 
         </label>
         <div className="relative">
           <div
-            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${
+            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 ${
               isDark ? 'text-slate-500' : 'text-slate-400'
             }`}
           >
             <Target className="w-5 h-5" />
           </div>
-          <select
-            id="primary_goal"
-            value={primaryGoal}
-            onChange={(e) => setPrimaryGoal(e.target.value)}
-            required
-            className={selectClassName}
-          >
-            <option value="" disabled>
-              Select Primary Goal
-            </option>
-            {PrimaryGoalSchema.options.map((option) => (
-              <option key={option} value={option}>
-                {option.replace('_', ' ')}
-              </option>
-            ))}
-          </select>
-          <div
-            className={`absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none ${
-              isDark ? 'text-slate-500' : 'text-slate-400'
-            }`}
-          >
-            <ChevronLeft className="w-5 h-5 -rotate-90" />
-          </div>
+          <Select value={primaryGoal} onValueChange={setPrimaryGoal}>
+            <SelectTrigger className="pl-10">
+              <SelectValue placeholder="Select Primary Goal" />
+            </SelectTrigger>
+            <SelectContent>
+              {PrimaryGoalSchema.options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {formatOption(option)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -153,35 +147,24 @@ const ProfileWizardStep3: React.FC<Props> = ({ onSubmit, onBack, initialData }) 
         </label>
         <div className="relative">
           <div
-            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${
+            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 ${
               isDark ? 'text-slate-500' : 'text-slate-400'
             }`}
           >
             <BookOpen className="w-5 h-5" />
           </div>
-          <select
-            id="learning_mode"
-            value={learningMode}
-            onChange={(e) => setLearningMode(e.target.value)}
-            required
-            className={selectClassName}
-          >
-            <option value="" disabled>
-              Select Learning Mode
-            </option>
-            {LearningModeSchema.options.map((option) => (
-              <option key={option} value={option}>
-                {option.replace('_', ' ')}
-              </option>
-            ))}
-          </select>
-          <div
-            className={`absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none ${
-              isDark ? 'text-slate-500' : 'text-slate-400'
-            }`}
-          >
-            <ChevronLeft className="w-5 h-5 -rotate-90" />
-          </div>
+          <Select value={learningMode} onValueChange={setLearningMode}>
+            <SelectTrigger className="pl-10">
+              <SelectValue placeholder="Select Learning Mode" />
+            </SelectTrigger>
+            <SelectContent>
+              {LearningModeSchema.options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {formatOption(option)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -197,35 +180,24 @@ const ProfileWizardStep3: React.FC<Props> = ({ onSubmit, onBack, initialData }) 
         </label>
         <div className="relative">
           <div
-            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${
+            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 ${
               isDark ? 'text-slate-500' : 'text-slate-400'
             }`}
           >
             <Zap className="w-5 h-5" />
           </div>
-          <select
-            id="learning_speed"
-            value={learningSpeed}
-            onChange={(e) => setLearningSpeed(e.target.value)}
-            required
-            className={selectClassName}
-          >
-            <option value="" disabled>
-              Select Learning Speed
-            </option>
-            {LearningSpeedSchema.options.map((option) => (
-              <option key={option} value={option}>
-                {option.replace('_', ' ')}
-              </option>
-            ))}
-          </select>
-          <div
-            className={`absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none ${
-              isDark ? 'text-slate-500' : 'text-slate-400'
-            }`}
-          >
-            <ChevronLeft className="w-5 h-5 -rotate-90" />
-          </div>
+          <Select value={learningSpeed} onValueChange={setLearningSpeed}>
+            <SelectTrigger className="pl-10">
+              <SelectValue placeholder="Select Learning Speed" />
+            </SelectTrigger>
+            <SelectContent>
+              {LearningSpeedSchema.options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {formatOption(option)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

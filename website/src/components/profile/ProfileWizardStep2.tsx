@@ -4,6 +4,13 @@ import { UserProfileUpdate, EducationLevelSchema, TechBackgroundSchema } from '.
 import { useSafeColorMode } from '../../hooks/useSafeColorMode';
 import { z } from 'zod';
 import { ChevronRight, ChevronLeft, AlertCircle, GraduationCap, Cpu } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 
 interface Props {
   onNext: (data: Partial<UserProfileUpdate>) => void;
@@ -36,6 +43,10 @@ const ProfileWizardStep2: React.FC<Props> = ({ onNext, onBack, initialData }) =>
         setError('An unexpected error occurred.');
       }
     }
+  };
+
+  const formatOption = (option: string) => {
+    return option.replace(/_/g, ' ');
   };
 
   return (
@@ -91,39 +102,24 @@ const ProfileWizardStep2: React.FC<Props> = ({ onNext, onBack, initialData }) =>
         </label>
         <div className="relative">
           <div
-            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${
+            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 ${
               isDark ? 'text-slate-500' : 'text-slate-400'
             }`}
           >
             <GraduationCap className="w-5 h-5" />
           </div>
-          <select
-            id="education_level"
-            value={educationLevel}
-            onChange={(e) => setEducationLevel(e.target.value)}
-            required
-            className={`block w-full pl-10 pr-10 py-3 rounded-lg transition-colors appearance-none ${
-              isDark
-                ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-                : 'bg-white border-slate-300 text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-            } border outline-none cursor-pointer`}
-          >
-            <option value="" disabled>
-              Select Education Level
-            </option>
-            {EducationLevelSchema.options.map((option) => (
-              <option key={option} value={option}>
-                {option.replace('_', ' ')}
-              </option>
-            ))}
-          </select>
-          <div
-            className={`absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none ${
-              isDark ? 'text-slate-500' : 'text-slate-400'
-            }`}
-          >
-            <ChevronRight className="w-5 h-5 rotate-90" />
-          </div>
+          <Select value={educationLevel} onValueChange={setEducationLevel}>
+            <SelectTrigger className="pl-10">
+              <SelectValue placeholder="Select Education Level" />
+            </SelectTrigger>
+            <SelectContent>
+              {EducationLevelSchema.options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {formatOption(option)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -139,39 +135,24 @@ const ProfileWizardStep2: React.FC<Props> = ({ onNext, onBack, initialData }) =>
         </label>
         <div className="relative">
           <div
-            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${
+            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 ${
               isDark ? 'text-slate-500' : 'text-slate-400'
             }`}
           >
             <Cpu className="w-5 h-5" />
           </div>
-          <select
-            id="tech_background"
-            value={techBackground}
-            onChange={(e) => setTechBackground(e.target.value)}
-            required
-            className={`block w-full pl-10 pr-10 py-3 rounded-lg transition-colors appearance-none ${
-              isDark
-                ? 'bg-slate-900 border-slate-700 text-slate-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-                : 'bg-white border-slate-300 text-slate-900 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-            } border outline-none cursor-pointer`}
-          >
-            <option value="" disabled>
-              Select Tech Background
-            </option>
-            {TechBackgroundSchema.options.map((option) => (
-              <option key={option} value={option}>
-                {option.replace('_', ' ')}
-              </option>
-            ))}
-          </select>
-          <div
-            className={`absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none ${
-              isDark ? 'text-slate-500' : 'text-slate-400'
-            }`}
-          >
-            <ChevronRight className="w-5 h-5 rotate-90" />
-          </div>
+          <Select value={techBackground} onValueChange={setTechBackground}>
+            <SelectTrigger className="pl-10">
+              <SelectValue placeholder="Select Tech Background" />
+            </SelectTrigger>
+            <SelectContent>
+              {TechBackgroundSchema.options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {formatOption(option)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

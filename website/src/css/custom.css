@@ -378,3 +378,52 @@
 [data-theme='dark'] .prism-code {
   background-color: #0f172a !important; /* slate-900 */
 }
+
+/* ========================================
+   SELECT DROPDOWN STYLING
+   ======================================== */
+
+/* Light mode select options */
+select option {
+  background-color: #ffffff;
+  color: #0f172a; /* slate-900 */
+  padding: 0.75rem 1rem;
+}
+
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: #ecfdf5; /* emerald-50 */
+  color: #059669; /* emerald-600 */
+}
+
+select option:disabled {
+  color: #94a3b8; /* slate-400 */
+}
+
+/* Dark mode select options */
+[data-theme='dark'] select,
+.dark select {
+  color-scheme: dark;
+}
+
+[data-theme='dark'] select option,
+.dark select option {
+  background-color: #0f172a; /* slate-900 */
+  color: #e2e8f0; /* slate-200 */
+}
+
+[data-theme='dark'] select option:hover,
+[data-theme='dark'] select option:focus,
+[data-theme='dark'] select option:checked,
+.dark select option:hover,
+.dark select option:focus,
+.dark select option:checked {
+  background-color: rgba(52, 211, 153, 0.1); /* emerald-400/10 */
+  color: #34d399; /* emerald-400 */
+}
+
+[data-theme='dark'] select option:disabled,
+.dark select option:disabled {
+  color: #64748b; /* slate-500 */
+}

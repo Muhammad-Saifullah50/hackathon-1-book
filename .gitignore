@@ -39,7 +39,7 @@ Thumbs.db
 *.ov
 cache/
 logs/
-data/
+/data/
 artifacts/
 .vscode-oss/
 

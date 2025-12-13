@@ -5,7 +5,7 @@ import { useSafeColorMode } from '../hooks/useSafeColorMode';
 
 export function ChatWidget() {
   const { isDark } = useSafeColorMode();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { control, sendUserMessage } = useChatKit({
     api: {
