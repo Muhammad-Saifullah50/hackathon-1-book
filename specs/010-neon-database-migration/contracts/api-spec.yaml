@@ -1,0 +1,354 @@
+openapi: 3.0.3
+info:
+  title: Physical AI Learning Platform API
+  description: |
+    API for the Physical AI & Humanoid Robotics learning platform.
+
+    ## Authentication
+    All protected endpoints require a Bearer token in the Authorization header.
+    Tokens are obtained from the Better Auth service running on the frontend.
+
+    ## Architecture
+    - **Frontend (Docusaurus)**: Hosts Better Auth for user authentication
+    - **Backend (FastAPI)**: Validates JWTs, handles profile operations
+    - **Database (Neon)**: Stores auth tables and user profiles
+  version: 2.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.example.com
+    description: Production
+
+tags:
+  - name: Health
+    description: System health checks
+  - name: Profile
+    description: User profile operations (requires authentication)
+
+paths:
+  /:
+    get:
+      tags:
+        - Health
+      summary: Root health check
+      operationId: root
+      responses:
+        '200':
+          description: Service is running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Database connectivity check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Database connection healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Database connection failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/profile:
+    get:
+      tags:
+        - Profile
+      summary: Get current user's profile
+      operationId: getProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags:
+        - Profile
+      summary: Create user profile
+      operationId: createProfile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileCreateRequest'
+      responses:
+        '201':
+          description: Profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Profile already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Profile
+      summary: Update user profile
+      operationId: updateProfile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileUpdateRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT token obtained from Better Auth.
+        Format: `Authorization: Bearer <token>`
+
+        Token is validated against JWKS endpoint from Better Auth.
+        Claims verified: iss, aud, exp, sub (user_id)
+
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok, error]
+          example: ok
+        service:
+          type: string
+          example: "RAG Tutor Agent (ChatKit Enabled)"
+        database:
+          type: string
+          enum: [connected, disconnected]
+          example: connected
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: "Unauthorized"
+        error_code:
+          type: string
+          example: "INVALID_TOKEN"
+      required:
+        - detail
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        user_id:
+          type: string
+          format: uuid
+          example: "660e8400-e29b-41d4-a716-446655440001"
+        age_range:
+          $ref: '#/components/schemas/AgeRange'
+        education_level:
+          $ref: '#/components/schemas/EducationLevel'
+        tech_background:
+          $ref: '#/components/schemas/TechBackground'
+        primary_goal:
+          $ref: '#/components/schemas/PrimaryGoal'
+        learning_mode:
+          $ref: '#/components/schemas/LearningMode'
+        learning_speed:
+          $ref: '#/components/schemas/LearningSpeed'
+        time_per_week:
+          type: integer
+          minimum: 0
+          nullable: true
+          example: 10
+        preferred_language:
+          type: string
+          default: "en"
+          example: "en"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - user_id
+        - preferred_language
+
+    ProfileCreateRequest:
+      type: object
+      properties:
+        age_range:
+          $ref: '#/components/schemas/AgeRange'
+        education_level:
+          $ref: '#/components/schemas/EducationLevel'
+        tech_background:
+          $ref: '#/components/schemas/TechBackground'
+        primary_goal:
+          $ref: '#/components/schemas/PrimaryGoal'
+        learning_mode:
+          $ref: '#/components/schemas/LearningMode'
+        learning_speed:
+          $ref: '#/components/schemas/LearningSpeed'
+        time_per_week:
+          type: integer
+          minimum: 0
+          nullable: true
+        preferred_language:
+          type: string
+          default: "en"
+
+    ProfileUpdateRequest:
+      type: object
+      properties:
+        age_range:
+          $ref: '#/components/schemas/AgeRange'
+        education_level:
+          $ref: '#/components/schemas/EducationLevel'
+        tech_background:
+          $ref: '#/components/schemas/TechBackground'
+        primary_goal:
+          $ref: '#/components/schemas/PrimaryGoal'
+        learning_mode:
+          $ref: '#/components/schemas/LearningMode'
+        learning_speed:
+          $ref: '#/components/schemas/LearningSpeed'
+        time_per_week:
+          type: integer
+          minimum: 0
+          nullable: true
+        preferred_language:
+          type: string
+
+    AgeRange:
+      type: string
+      nullable: true
+      enum:
+        - under_18
+        - 18_24
+        - 25_34
+        - 35_plus
+
+    EducationLevel:
+      type: string
+      nullable: true
+      enum:
+        - high_school
+        - undergrad
+        - masters
+        - phd
+        - self_taught
+
+    TechBackground:
+      type: string
+      nullable: true
+      enum:
+        - software_engineer
+        - hardware_engineer
+        - student
+        - hobbyist
+
+    PrimaryGoal:
+      type: string
+      nullable: true
+      enum:
+        - career_switch
+        - academic
+        - hobby_project
+        - startup_founder
+
+    LearningMode:
+      type: string
+      nullable: true
+      enum:
+        - visual
+        - textual
+        - code_first
+
+    LearningSpeed:
+      type: string
+      nullable: true
+      enum:
+        - intensive
+        - balanced
+        - casual
