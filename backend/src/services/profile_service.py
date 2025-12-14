@@ -42,12 +42,12 @@ class ProfileService:
                         """
                         INSERT INTO user_profile (
                             user_id, age_range, education_level, tech_background,
-                            primary_goal, learning_mode, learning_speed,
+                            focus_area, primary_goal, learning_mode, learning_speed,
                             time_per_week, preferred_language
                         )
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         RETURNING id, user_id, age_range, education_level, tech_background,
-                                  primary_goal, learning_mode, learning_speed,
+                                  focus_area, primary_goal, learning_mode, learning_speed,
                                   time_per_week, preferred_language, created_at, updated_at
                         """,
                         (
@@ -55,6 +55,7 @@ class ProfileService:
                             profile_to_create.age_range.value if profile_to_create.age_range else None,
                             profile_to_create.education_level.value if profile_to_create.education_level else None,
                             profile_to_create.tech_background.value if profile_to_create.tech_background else None,
+                            profile_to_create.focus_area.value if profile_to_create.focus_area else None,
                             profile_to_create.primary_goal.value if profile_to_create.primary_goal else None,
                             profile_to_create.learning_mode.value if profile_to_create.learning_mode else None,
                             profile_to_create.learning_speed.value if profile_to_create.learning_speed else None,
@@ -91,7 +92,7 @@ class ProfileService:
                     cur.execute(
                         """
                         SELECT id, user_id, age_range, education_level, tech_background,
-                               primary_goal, learning_mode, learning_speed,
+                               focus_area, primary_goal, learning_mode, learning_speed,
                                time_per_week, preferred_language, created_at, updated_at
                         FROM user_profile
                         WHERE user_id = %s
@@ -140,6 +141,9 @@ class ProfileService:
             if validated_model.tech_background is not None:
                 update_fields.append("tech_background = %s")
                 values.append(validated_model.tech_background.value)
+            if validated_model.focus_area is not None:
+                update_fields.append("focus_area = %s")
+                values.append(validated_model.focus_area.value)
             if validated_model.primary_goal is not None:
                 update_fields.append("primary_goal = %s")
                 values.append(validated_model.primary_goal.value)
@@ -174,7 +178,7 @@ class ProfileService:
                         SET {', '.join(update_fields)}
                         WHERE user_id = %s
                         RETURNING id, user_id, age_range, education_level, tech_background,
-                                  primary_goal, learning_mode, learning_speed,
+                                  focus_area, primary_goal, learning_mode, learning_speed,
                                   time_per_week, preferred_language, created_at, updated_at
                         """,
                         tuple(values),
@@ -217,16 +221,17 @@ class ProfileService:
     def _row_to_profile(self, row: tuple) -> UserProfile:
         """Convert database row to UserProfile model."""
         # Column order: id, user_id, age_range, education_level, tech_background,
-        #               primary_goal, learning_mode, learning_speed,
+        #               focus_area, primary_goal, learning_mode, learning_speed,
         #               time_per_week, preferred_language, created_at, updated_at
         return UserProfile(
             user_id=row[1],
             age_range=row[2],
             education_level=row[3],
             tech_background=row[4],
-            primary_goal=row[5],
-            learning_mode=row[6],
-            learning_speed=row[7],
-            time_per_week=row[8],
-            preferred_language=row[9] or "en",
+            focus_area=row[5],
+            primary_goal=row[6],
+            learning_mode=row[7],
+            learning_speed=row[8],
+            time_per_week=row[9],
+            preferred_language=row[10] or "en",
         )

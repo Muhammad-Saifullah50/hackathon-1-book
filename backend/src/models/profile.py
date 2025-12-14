@@ -25,6 +25,10 @@ class TechBackground(str, Enum):
     INTERMEDIATE = "intermediate"
     ADVANCED = "advanced"
 
+class FocusArea(str, Enum):
+    HARDWARE = "hardware"
+    SOFTWARE = "software"
+
 class PrimaryGoal(str, Enum):
     CAREER = "career"
     RESEARCH = "research"
@@ -47,6 +51,7 @@ class UserProfile(BaseModel):
     age_range: Optional[AgeRange] = None
     education_level: Optional[EducationLevel] = None
     tech_background: Optional[TechBackground] = None
+    focus_area: Optional[FocusArea] = None
     primary_goal: Optional[PrimaryGoal] = None
     learning_mode: Optional[LearningMode] = None
     learning_speed: Optional[LearningSpeed] = None

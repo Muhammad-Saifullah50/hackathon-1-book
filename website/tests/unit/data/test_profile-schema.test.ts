@@ -1,5 +1,5 @@
 // website/tests/unit/data/test_profile-schema.test.ts
-import { UserProfileSchema, UserProfileUpdateSchema } from '../../../src/data/profile-schema'; // Correct import with .ts
+import { UserProfileSchema, UserProfileUpdateSchema, FocusAreaSchema } from '../../../src/data/profile-schema';
 import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -70,5 +70,37 @@ describe('UserProfileSchema', () => {
       education_level: 'masterss', // Typo, invalid enum
     };
     expect(() => UserProfileUpdateSchema.parse(invalidUpdate)).toThrow(z.ZodError);
+  });
+});
+
+describe('FocusAreaSchema', () => {
+  it('should validate hardware as a valid focus area', () => {
+    expect(() => FocusAreaSchema.parse('hardware')).not.toThrow();
+  });
+
+  it('should validate software as a valid focus area', () => {
+    expect(() => FocusAreaSchema.parse('software')).not.toThrow();
+  });
+
+  it('should reject invalid focus area values', () => {
+    expect(() => FocusAreaSchema.parse('both')).toThrow(z.ZodError);
+    expect(() => FocusAreaSchema.parse('fullstack')).toThrow(z.ZodError);
+    expect(() => FocusAreaSchema.parse('')).toThrow(z.ZodError);
+  });
+
+  it('should include focus_area in UserProfileSchema', () => {
+    const profileWithFocusArea = {
+      user_id: uuidv4(),
+      focus_area: 'hardware',
+    };
+    const parsed = UserProfileSchema.parse(profileWithFocusArea);
+    expect(parsed.focus_area).toBe('hardware');
+  });
+
+  it('should validate focus_area in UserProfileUpdateSchema', () => {
+    const partialUpdate = {
+      focus_area: 'software',
+    };
+    expect(() => UserProfileUpdateSchema.parse(partialUpdate)).not.toThrow();
   });
 });

@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 from uuid import uuid4
-from src.models.profile import UserProfile, AgeRange, EducationLevel, TechBackground, PrimaryGoal, LearningMode, LearningSpeed
+from src.models.profile import UserProfile, AgeRange, EducationLevel, TechBackground, FocusArea, PrimaryGoal, LearningMode, LearningSpeed
 
 def test_user_profile_creation_valid():
     user_id = uuid4()
@@ -54,3 +54,20 @@ def test_user_profile_preferred_language_custom():
 def test_user_id_invalid_type_fails():
     with pytest.raises(ValidationError):
         UserProfile(user_id="not-a-uuid")
+
+def test_user_profile_focus_area_hardware():
+    user_id = uuid4()
+    profile = UserProfile(user_id=user_id, focus_area=FocusArea.HARDWARE)
+    assert profile.focus_area == FocusArea.HARDWARE
+    assert profile.focus_area.value == "hardware"
+
+def test_user_profile_focus_area_software():
+    user_id = uuid4()
+    profile = UserProfile(user_id=user_id, focus_area=FocusArea.SOFTWARE)
+    assert profile.focus_area == FocusArea.SOFTWARE
+    assert profile.focus_area.value == "software"
+
+def test_user_profile_focus_area_invalid_fails():
+    user_id = uuid4()
+    with pytest.raises(ValidationError):
+        UserProfile(user_id=user_id, focus_area="both")  # Invalid - only hardware or software

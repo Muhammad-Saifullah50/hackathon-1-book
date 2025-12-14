@@ -1,9 +1,9 @@
 // website/src/components/profile/ProfileWizardStep2.tsx
 import React, { useState } from 'react';
-import { UserProfileUpdate, EducationLevelSchema, TechBackgroundSchema } from '../../data/profile-schema';
+import { UserProfileUpdate, EducationLevelSchema, TechBackgroundSchema, FocusAreaSchema } from '../../data/profile-schema';
 import { useSafeColorMode } from '../../hooks/useSafeColorMode';
 import { z } from 'zod';
-import { ChevronRight, ChevronLeft, AlertCircle, GraduationCap, Cpu } from 'lucide-react';
+import { ChevronRight, ChevronLeft, AlertCircle, GraduationCap, Cpu, Wrench } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -22,6 +22,7 @@ const ProfileWizardStep2: React.FC<Props> = ({ onNext, onBack, initialData }) =>
   const { isDark } = useSafeColorMode();
   const [educationLevel, setEducationLevel] = useState(initialData.education_level || '');
   const [techBackground, setTechBackground] = useState(initialData.tech_background || '');
+  const [focusArea, setFocusArea] = useState(initialData.focus_area || '');
   const [error, setError] = useState<string | null>(null);
 
   const handleNext = (e: React.FormEvent) => {
@@ -31,10 +32,12 @@ const ProfileWizardStep2: React.FC<Props> = ({ onNext, onBack, initialData }) =>
       // Validate with Zod
       EducationLevelSchema.parse(educationLevel);
       TechBackgroundSchema.parse(techBackground);
+      FocusAreaSchema.parse(focusArea);
 
       onNext({
         education_level: educationLevel as any,
         tech_background: techBackground as any,
+        focus_area: focusArea as any,
       });
     } catch (e) {
       if (e instanceof z.ZodError) {
@@ -154,6 +157,42 @@ const ProfileWizardStep2: React.FC<Props> = ({ onNext, onBack, initialData }) =>
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      {/* Focus Area field */}
+      <div className="space-y-2">
+        <label
+          htmlFor="focus_area"
+          className={`block text-sm font-medium ${
+            isDark ? 'text-slate-300' : 'text-slate-700'
+          }`}
+        >
+          Focus Area
+        </label>
+        <div className="relative">
+          <div
+            className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 ${
+              isDark ? 'text-slate-500' : 'text-slate-400'
+            }`}
+          >
+            <Wrench className="w-5 h-5" />
+          </div>
+          <Select value={focusArea} onValueChange={setFocusArea}>
+            <SelectTrigger className="pl-10 capitalize">
+              <SelectValue className='capitalize' placeholder="Select Focus Area" />
+            </SelectTrigger>
+            <SelectContent>
+              {FocusAreaSchema.options.map((option) => (
+                <SelectItem className='capitalize' key={option} value={option}>
+                  {formatOption(option)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+          Hardware: robotics, sensors, actuators. Software: AI, algorithms, simulation.
+        </p>
       </div>
 
       {/* Navigation buttons */}
