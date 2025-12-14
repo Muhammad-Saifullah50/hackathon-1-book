@@ -42,7 +42,7 @@ describe('SignupForm', () => {
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
   });
 
-  it('calls signup and shows verification message if no token is returned', async () => {
+  it('calls signup and redirects to wizard on success', async () => {
     mockSignup.mockResolvedValue(null); // Success
     render(<SignupForm />);
     const emailInput = screen.getByLabelText(/email/i);
@@ -55,25 +55,6 @@ describe('SignupForm', () => {
 
     await waitFor(() => {
       expect(mockSignup).toHaveBeenCalledTimes(1);
-      expect(screen.getByText(/please check your email/i)).toBeInTheDocument();
-      expect(mockHistoryPush).not.toHaveBeenCalled();
-    });
-  });
-
-  it('calls signup and redirects if token is present (auto-login)', async () => {
-    mockSignup.mockResolvedValue(null);
-    localStorage.setItem('access_token', 'fake-token'); // Simulate token being set
-
-    render(<SignupForm />);
-    const emailInput = screen.getByLabelText(/email/i);
-    const passwordInput = screen.getByLabelText(/password/i);
-    const signupButton = screen.getByRole('button', { name: /sign up/i });
-
-    fireEvent.change(emailInput, { target: { value: 'newuser@example.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'newpassword123' } });
-    fireEvent.click(signupButton);
-
-    await waitFor(() => {
       expect(mockHistoryPush).toHaveBeenCalledWith('/signup-wizard');
     });
   });

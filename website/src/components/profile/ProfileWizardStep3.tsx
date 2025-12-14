@@ -121,12 +121,12 @@ const ProfileWizardStep3: React.FC<Props> = ({ onSubmit, onBack, initialData }) 
             <Target className="w-5 h-5" />
           </div>
           <Select value={primaryGoal} onValueChange={setPrimaryGoal}>
-            <SelectTrigger className="pl-10">
+            <SelectTrigger className="pl-10 capitalize">
               <SelectValue placeholder="Select Primary Goal" />
             </SelectTrigger>
             <SelectContent>
               {PrimaryGoalSchema.options.map((option) => (
-                <SelectItem key={option} value={option}>
+               <SelectItem className='capitalize' key={option} value={option}>
                   {formatOption(option)}
                 </SelectItem>
               ))}
@@ -154,12 +154,12 @@ const ProfileWizardStep3: React.FC<Props> = ({ onSubmit, onBack, initialData }) 
             <BookOpen className="w-5 h-5" />
           </div>
           <Select value={learningMode} onValueChange={setLearningMode}>
-            <SelectTrigger className="pl-10">
+            <SelectTrigger className="pl-10 capitalize">
               <SelectValue placeholder="Select Learning Mode" />
             </SelectTrigger>
             <SelectContent>
               {LearningModeSchema.options.map((option) => (
-                <SelectItem key={option} value={option}>
+                <SelectItem className='capitalize' key={option} value={option}>
                   {formatOption(option)}
                 </SelectItem>
               ))}
@@ -187,12 +187,12 @@ const ProfileWizardStep3: React.FC<Props> = ({ onSubmit, onBack, initialData }) 
             <Zap className="w-5 h-5" />
           </div>
           <Select value={learningSpeed} onValueChange={setLearningSpeed}>
-            <SelectTrigger className="pl-10">
-              <SelectValue placeholder="Select Learning Speed" />
+            <SelectTrigger className="pl-10 capitalize">
+              <SelectValue className='capitalize' placeholder="Select Learning Speed" />
             </SelectTrigger>
             <SelectContent>
               {LearningSpeedSchema.options.map((option) => (
-                <SelectItem key={option} value={option}>
+                <SelectItem className='capitalize' key={option} value={option}>
                   {formatOption(option)}
                 </SelectItem>
               ))}

@@ -109,12 +109,12 @@ const ProfileWizardStep2: React.FC<Props> = ({ onNext, onBack, initialData }) =>
             <GraduationCap className="w-5 h-5" />
           </div>
           <Select value={educationLevel} onValueChange={setEducationLevel}>
-            <SelectTrigger className="pl-10">
-              <SelectValue placeholder="Select Education Level" />
+            <SelectTrigger className="pl-10 capitalize">
+              <SelectValue className='capitalize' placeholder="Select Education Level" />
             </SelectTrigger>
             <SelectContent>
               {EducationLevelSchema.options.map((option) => (
-                <SelectItem key={option} value={option}>
+                <SelectItem className='capitalize' key={option} value={option}>
                   {formatOption(option)}
                 </SelectItem>
               ))}
@@ -142,12 +142,12 @@ const ProfileWizardStep2: React.FC<Props> = ({ onNext, onBack, initialData }) =>
             <Cpu className="w-5 h-5" />
           </div>
           <Select value={techBackground} onValueChange={setTechBackground}>
-            <SelectTrigger className="pl-10">
-              <SelectValue placeholder="Select Tech Background" />
+            <SelectTrigger className="pl-10 capitalize">
+              <SelectValue className='capitalize' placeholder="Select Tech Background" />
             </SelectTrigger>
             <SelectContent>
               {TechBackgroundSchema.options.map((option) => (
-                <SelectItem key={option} value={option}>
+                <SelectItem className='capitalize' key={option} value={option}>
                   {formatOption(option)}
                 </SelectItem>
               ))}

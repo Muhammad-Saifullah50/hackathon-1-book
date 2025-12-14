@@ -2,10 +2,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useSafeColorMode } from '../../hooks/useSafeColorMode';
-import { SignupCredentials } from '../../types/auth';
 import { useHistory } from '@docusaurus/router';
 import Link from '@docusaurus/Link';
-import { UserPlus, Mail, Lock, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { UserPlus, Mail, Lock, AlertCircle } from 'lucide-react';
 
 const SignupForm: React.FC = () => {
   const { signup, loading, error: authError } = useAuth();
@@ -14,13 +13,11 @@ const SignupForm: React.FC = () => {
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
   const [isUserExists, setIsUserExists] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const history = useHistory();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
-    setSuccessMessage(null);
     setIsUserExists(false);
 
     const errorMessage = await signup({ email, password });
@@ -32,16 +29,8 @@ const SignupForm: React.FC = () => {
       }
       setLocalError(errorMessage);
     } else {
-      // Signup successful - check if we have a token (auto-login) or need verification
-      const storedToken = localStorage.getItem('access_token');
-      if (storedToken) {
-        history.push('/signup-wizard');
-      } else {
-        // User created but no token -> Email verification needed
-        setSuccessMessage("Account created! Please check your email to verify your account.");
-        setEmail('');
-        setPassword('');
-      }
+      // Signup successful - redirect to wizard
+      history.push('/signup-wizard');
     }
   };
 
@@ -74,20 +63,6 @@ const SignupForm: React.FC = () => {
               Click here to login instead
             </Link>
           )}
-        </div>
-      )}
-
-      {/* Success message */}
-      {successMessage && (
-        <div
-          className={`flex items-start gap-3 p-4 rounded-lg ${
-            isDark
-              ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
-              : 'bg-emerald-50 border border-emerald-200 text-emerald-600'
-          }`}
-        >
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
-          <p className="text-sm">{successMessage}</p>
         </div>
       )}
 

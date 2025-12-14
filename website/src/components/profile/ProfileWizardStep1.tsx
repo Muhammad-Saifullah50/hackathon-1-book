@@ -39,9 +39,22 @@ const ProfileWizardStep1: React.FC<Props> = ({ onNext, initialData }) => {
     }
   };
 
-  const formatOption = (option: string) => {
-    return option.replace('_', ' ').replace('plus', '+');
-  };
+const formatOption = (option: string): string => {
+  const parts = option.split('_');
+
+  // Case: under_18 → Under 18
+  if (parts[0] === 'under') {
+    return `Under ${parts[1]}`;
+  }
+
+  // Case: 35_plus → 35+
+  if (parts[1] === 'plus') {
+    return `${parts[0]}+`;
+  }
+
+  // Case: 18_24 → 18 – 24
+  return `${parts[0]} – ${parts[1]}`;
+};
 
   return (
     <form onSubmit={handleNext} className="space-y-6">

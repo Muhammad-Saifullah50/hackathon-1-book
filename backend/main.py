@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.responses import Response, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,14 +11,20 @@ from src.api.auth.routes import router as auth_router
 # Import the new profile router
 from src.api.profile.routes import router as profile_router
 
-load_dotenv()
+# Load .env from the backend directory (where this file is located)
+env_path = Path(__file__).parent / ".env"
+load_dotenv(env_path)
 
 app = FastAPI()
 
 # Allow CORS for local development
+# Includes: Docusaurus frontend, Auth server, and production origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",  # Docusaurus dev server
+        "http://localhost:3001",  # Auth server
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,6 +41,25 @@ chatkit_server = RagTutorChatKitServer()
 @app.get("/")
 async def root():
     return {"status": "ok", "service": "RAG Tutor Agent (ChatKit Enabled)"}
+
+
+@app.get("/health")
+async def health_check():
+    """
+    Health check endpoint with database connectivity status.
+
+    Returns:
+        JSON with status, service name, and database connection status
+    """
+    from src.services.database import check_database_connection
+
+    db_connected = check_database_connection()
+
+    return {
+        "status": "ok",
+        "service": "Physical AI & Robotics Platform",
+        "database": "connected" if db_connected else "disconnected",
+    }
 
 @app.post("/chatkit")
 async def chatkit_endpoint(request: Request):

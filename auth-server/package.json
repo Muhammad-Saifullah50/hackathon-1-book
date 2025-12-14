@@ -1,0 +1,33 @@
+{
+  "name": "auth-server",
+  "version": "1.0.0",
+  "description": "Better Auth server for Physical AI & Humanoid Robotics Learning Platform",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "generate": "npx @better-auth/cli generate",
+    "migrate": "npx @better-auth/cli migrate",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.8",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "dotenv": "^16.4.7",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20.0"
+  }
+}

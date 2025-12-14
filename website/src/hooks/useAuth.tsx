@@ -1,95 +1,103 @@
 // website/src/hooks/useAuth.tsx
-import { useState, useEffect, useContext, createContext } from 'react';
+/**
+ * Authentication hook using Better Auth.
+ *
+ * This hook provides:
+ * - User authentication state
+ * - Login/signup/logout methods
+ * - JWT token for API calls
+ *
+ * The auth flow:
+ * 1. User authenticates via Better Auth (auth-server)
+ * 2. Better Auth issues JWT token
+ * 3. Frontend stores session and provides token for FastAPI calls
+ */
+
+import { useState, useEffect, useContext, createContext, useCallback } from 'react';
 import { User, LoginCredentials, SignupCredentials } from '../types/auth';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext'; // Import Docusaurus context
+import { authClient } from '../lib/auth-client';
 
 interface AuthContextType {
   user: User | null;
-  token: string | null; // Expose token
+  token: string | null;
   loading: boolean;
   error: string | null;
   login: (credentials: LoginCredentials) => Promise<string | null>;
   signup: (credentials: SignupCredentials) => Promise<string | null>;
   logout: () => Promise<void>;
+  refreshSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const { siteConfig } = useDocusaurusContext();
-  const API_BASE_URL = (siteConfig.customFields?.backendUrl as string) || 'http://localhost:8000';
-
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Initialize from localStorage
-  useEffect(() => {
-    const storedToken = localStorage.getItem('access_token');
-    if (storedToken && storedToken !== "null" && storedToken !== "undefined") {
-      setToken(storedToken);
-      fetchUser(storedToken);
-    } else {
+  // Refresh session from Better Auth
+  const refreshSession = useCallback(async () => {
+    setLoading(true);
+    try {
+      const sessionResult = await authClient.getSession();
+
+      if (sessionResult.data?.user) {
+        const sessionUser = sessionResult.data.user;
+        setUser({
+          id: sessionUser.id,
+          email: sessionUser.email,
+        });
+
+        // Get JWT token for API calls using Better Auth's token() method
+        try {
+          const tokenResult = await authClient.token();
+          if (tokenResult.data?.token) {
+            setToken(tokenResult.data.token);
+            localStorage.setItem('access_token', tokenResult.data.token);
+          }
+        } catch (tokenErr) {
+          console.warn('Failed to get JWT token:', tokenErr);
+          // Session exists but no JWT - still authenticated
+        }
+      } else {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('access_token');
+      }
+    } catch (err) {
+      console.error('Failed to refresh session:', err);
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('access_token');
+    } finally {
       setLoading(false);
     }
   }, []);
 
-  const fetchUser = async (accessToken: string) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      });
-      if (response.ok) {
-        const userData: User = await response.json();
-        setUser(userData);
-      } else {
-        // Token invalid or expired
-        localStorage.removeItem('access_token');
-        setToken(null);
-        setUser(null);
-      }
-    } catch (err) {
-      setError('Failed to fetch user session.');
-      // Keep token if it's just a network error? Maybe.
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Initialize session on mount
+  useEffect(() => {
+    refreshSession();
+  }, [refreshSession]);
 
   const login = async (credentials: LoginCredentials): Promise<string | null> => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
+      const result = await authClient.signIn.email({
+        email: credentials.email,
+        password: credentials.password,
       });
-      if (response.ok) {
-        const data = await response.json();
-        const userData: User = data.user;
-        const accessToken: string | null = data.access_token;
-        
-        setUser(userData);
-        if (accessToken) {
-            setToken(accessToken);
-            localStorage.setItem('access_token', accessToken);
-        } else {
-            // Login successful but no token? (Shouldn't happen for login usually)
-            setToken(null);
-            localStorage.removeItem('access_token');
-        }
-        return null;
-      } else {
-        const errorData = await response.json();
-        const errorMessage = errorData.detail || 'Login failed.';
+
+      if (result.error) {
+        const errorMessage = result.error.message || 'Login failed.';
         setError(errorMessage);
         return errorMessage;
       }
+
+      // Refresh session to get user and token
+      await refreshSession();
+      return null;
     } catch (err) {
       const errorMessage = 'Network error or server unreachable.';
       setError(errorMessage);
@@ -103,34 +111,27 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
+      const result = await authClient.signUp.email({
+        email: credentials.email,
+        password: credentials.password,
+        name: credentials.email.split('@')[0], // Default name from email
       });
-      if (response.ok) {
-        const data = await response.json();
-        const userData: User = data.user;
-        const accessToken: string | null = data.access_token;
 
-        setUser(userData);
-        
-        if (accessToken) {
-            setToken(accessToken);
-            localStorage.setItem('access_token', accessToken);
-        } else {
-            // Signup successful but no token (likely email verification required)
-            setToken(null);
-            localStorage.removeItem('access_token');
-            // We return null (success) but user/token state reflects reality
+      if (result.error) {
+        // Handle duplicate email error
+        if (result.error.message?.toLowerCase().includes('already exists')) {
+          const errorMessage = 'An account with this email already exists.';
+          setError(errorMessage);
+          return errorMessage;
         }
-        return null;
-      } else {
-        const errorData = await response.json();
-        const errorMessage = errorData.detail || 'Signup failed.';
+        const errorMessage = result.error.message || 'Signup failed.';
         setError(errorMessage);
         return errorMessage;
       }
+
+      // Refresh session to get user and token
+      await refreshSession();
+      return null;
     } catch (err) {
       const errorMessage = 'Network error or server unreachable.';
       setError(errorMessage);
@@ -144,16 +145,10 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
     setLoading(true);
     setError(null);
     try {
-      if (token) {
-        await fetch(`${API_BASE_URL}/auth/logout`, { 
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-      }
+      await authClient.signOut();
     } catch (err) {
-      // Ignore network errors on logout
+      console.error('Logout error:', err);
+      // Continue with local cleanup even if server call fails
     } finally {
       setUser(null);
       setToken(null);
@@ -163,7 +158,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, error, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, error, login, signup, logout, refreshSession }}>
       {children}
     </AuthContext.Provider>
   );
