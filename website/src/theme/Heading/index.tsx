@@ -11,6 +11,13 @@ export default function HeadingWrapper(props: Props): React.ReactElement {
   // Only show PersonalizationBar after h1 headings on doc pages
   const showPersonalizationBar = props.as === 'h1' && isDocPage;
 
+  console.log('[HeadingWrapper]', {
+    pathname: location.pathname,
+    isDocPage,
+    headingAs: props.as,
+    showPersonalizationBar
+  });
+
   return (
     <>
       <Heading {...props} />

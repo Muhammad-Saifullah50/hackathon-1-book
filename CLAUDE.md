@@ -353,6 +353,7 @@ QDRANT_URL=http://localhost:6333
 ---
 
 ## Recent Changes
+- 011-personalize-page: Added Python 3.12 (backend), TypeScript 5.6 (frontend)
 - 010-neon-database-migration: Added Python 3.12 (backend), TypeScript 5.x (frontend) + FastAPI, Pydantic, Better Auth, Docusaurus 3.x, python-jose
 
 ```
@@ -401,3 +402,5 @@ npm run test:e2e
 ## Active Technologies
 - Python 3.12 (backend), TypeScript 5.x (frontend) + FastAPI, Pydantic, Better Auth, Docusaurus 3.x, python-jose (010-neon-database-migration)
 - Neon Serverless PostgreSQL (replacing Supabase PostgreSQL) (010-neon-database-migration)
+- Python 3.12 (backend), TypeScript 5.6 (frontend) (011-personalize-page)
+- Neon PostgreSQL (personalization_history, personalization_quota tables), localStorage (client-side cache) (011-personalize-page)

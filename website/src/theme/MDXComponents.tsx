@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Alert, AlertTitle, AlertDescription } from '../components/ui/alert';
 import { Badge } from '../components/ui/badge';
 import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption } from '../components/ui/table';
+import HeroBox from '../components/ui/hero-box';
 import PersonalizationBar from '../components/PersonalizationBar';
 
 export default {
@@ -29,5 +30,6 @@ export default {
   TableRow,
   TableCell,
   TableCaption,
+  HeroBox,
   PersonalizationBar,
 };

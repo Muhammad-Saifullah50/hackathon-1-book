@@ -6,10 +6,9 @@ from chatkit.server import StreamingResult
 from chatkit_server import RagTutorChatKitServer
 from dotenv import load_dotenv
 
-# Import the new auth router
-from src.api.auth.routes import router as auth_router
-# Import the new profile router
+# Import routers
 from src.api.profile.routes import router as profile_router
+from src.api.personalization.routes import router as personalization_router
 
 # Load .env from the backend directory (where this file is located)
 env_path = Path(__file__).parent / ".env"
@@ -30,10 +29,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include the auth router
-app.include_router(auth_router)
-# Include the profile router
+# Include routers
 app.include_router(profile_router)
+app.include_router(personalization_router)
 
 # Initialize ChatKit Server
 chatkit_server = RagTutorChatKitServer()

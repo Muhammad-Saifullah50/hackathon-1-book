@@ -1,0 +1,400 @@
+openapi: 3.0.3
+info:
+  title: Page Personalization API
+  description: |
+    API for personalizing documentation page content based on user learning profiles.
+    Uses OpenAI Agents SDK with dynamic instructions for content transformation.
+  version: 1.0.0
+  contact:
+    name: Physical AI & Humanoid Robotics Platform
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+  - url: https://api.example.com/api
+    description: Production server
+
+tags:
+  - name: Personalization
+    description: Content personalization operations
+  - name: Quota
+    description: Usage quota management
+  - name: History
+    description: Personalization history
+
+paths:
+  /personalization/personalize:
+    post:
+      tags:
+        - Personalization
+      summary: Personalize page content
+      description: |
+        Sends page markdown content to the personalization agent and returns
+        content tailored to the user's learning profile. Decrements daily quota
+        unless `isFreeRepersonalization` is true.
+      operationId: personalizeContent
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalizationRequest'
+            example:
+              pageUrl: "/docs/module-1/intro"
+              pageContent: "# Introduction to Robotics\n\nRobotics is..."
+              isFreeRepersonalization: false
+      responses:
+        '200':
+          description: Content personalized successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalizationResponse'
+              example:
+                personalizedContent: "# Introduction to Robotics\n\nImagine a robot..."
+                profileHash: "a1b2c3d4e5f6..."
+                originalContentHash: "x9y8z7w6..."
+                processingTimeMs: 8500
+                quotaRemaining: 4
+        '400':
+          description: Invalid request (empty content, invalid URL)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - missing or invalid JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Profile not complete - user needs to complete profile wizard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "profile_incomplete"
+                message: "Please complete your profile before personalizing content"
+                profileWizardUrl: "/signup-wizard"
+        '429':
+          description: Daily quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotaExceededResponse'
+              example:
+                error: "quota_exceeded"
+                message: "Daily personalization limit reached (5/5)"
+                quotaStatus:
+                  limit: 5
+                  used: 5
+                  remaining: 0
+                  resetsAt: "2025-12-15T00:00:00Z"
+        '500':
+          description: Personalization service error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: Personalization timeout (>15 seconds)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /personalization/quota:
+    get:
+      tags:
+        - Quota
+      summary: Get current quota status
+      description: Returns the user's current daily personalization quota status.
+      operationId: getQuotaStatus
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Quota status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotaStatus'
+              example:
+                limit: 5
+                used: 2
+                remaining: 3
+                resetsAt: "2025-12-15T00:00:00Z"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /personalization/history:
+    get:
+      tags:
+        - History
+      summary: Get personalization history
+      description: |
+        Returns list of pages the user has previously personalized.
+        Used for cross-device awareness - detects pages personalized on other devices.
+      operationId: getPersonalizationHistory
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: History retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalizationHistoryResponse'
+              example:
+                pages:
+                  - url: "/docs/module-1/intro"
+                    profileHash: "a1b2c3d4..."
+                    createdAt: "2025-12-14T10:30:00Z"
+                  - url: "/docs/module-1/kinematics"
+                    profileHash: "a1b2c3d4..."
+                    createdAt: "2025-12-14T11:15:00Z"
+                currentProfileHash: "a1b2c3d4..."
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /personalization/history/{pageUrl}:
+    get:
+      tags:
+        - History
+      summary: Check if specific page was personalized
+      description: |
+        Checks if a specific page was previously personalized by the user.
+        Returns profile hash for comparison with current profile.
+      operationId: checkPagePersonalized
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: pageUrl
+          in: path
+          required: true
+          description: URL-encoded page path
+          schema:
+            type: string
+          example: "%2Fdocs%2Fmodule-1%2Fintro"
+      responses:
+        '200':
+          description: Page was previously personalized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageHistoryResponse'
+              example:
+                found: true
+                profileHash: "a1b2c3d4..."
+                originalContentHash: "x9y8z7..."
+                createdAt: "2025-12-14T10:30:00Z"
+                isStale: false
+        '404':
+          description: Page has not been personalized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageHistoryResponse'
+              example:
+                found: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Better Auth JWT token
+
+  schemas:
+    PersonalizationRequest:
+      type: object
+      required:
+        - pageUrl
+        - pageContent
+      properties:
+        pageUrl:
+          type: string
+          maxLength: 500
+          description: URL path of the page being personalized
+          example: "/docs/module-1/intro"
+        pageContent:
+          type: string
+          minLength: 1
+          description: Original markdown content of the page
+          example: "# Introduction to Robotics\n\nRobotics is..."
+        isFreeRepersonalization:
+          type: boolean
+          default: false
+          description: |
+            If true, this is a free re-personalization for a previously
+            personalized page (cross-device or profile change). Does not
+            decrement quota.
+
+    PersonalizationResponse:
+      type: object
+      required:
+        - personalizedContent
+        - profileHash
+        - originalContentHash
+        - processingTimeMs
+        - quotaRemaining
+      properties:
+        personalizedContent:
+          type: string
+          description: Personalized markdown content
+        profileHash:
+          type: string
+          pattern: "^[a-f0-9]{64}$"
+          description: SHA-256 hash of user profile at personalization time
+        originalContentHash:
+          type: string
+          pattern: "^[a-f0-9]{64}$"
+          description: SHA-256 hash of original content (for change detection)
+        processingTimeMs:
+          type: integer
+          minimum: 0
+          description: Time taken to personalize content in milliseconds
+        quotaRemaining:
+          type: integer
+          minimum: 0
+          maximum: 5
+          description: Remaining personalizations for today
+
+    QuotaStatus:
+      type: object
+      required:
+        - limit
+        - used
+        - remaining
+        - resetsAt
+      properties:
+        limit:
+          type: integer
+          example: 5
+          description: Maximum personalizations per day
+        used:
+          type: integer
+          minimum: 0
+          example: 2
+          description: Personalizations used today
+        remaining:
+          type: integer
+          minimum: 0
+          example: 3
+          description: Personalizations remaining today
+        resetsAt:
+          type: string
+          format: date-time
+          description: UTC timestamp when quota resets (midnight)
+          example: "2025-12-15T00:00:00Z"
+
+    QuotaExceededResponse:
+      type: object
+      required:
+        - error
+        - message
+        - quotaStatus
+      properties:
+        error:
+          type: string
+          enum: [quota_exceeded]
+        message:
+          type: string
+        quotaStatus:
+          $ref: '#/components/schemas/QuotaStatus'
+
+    PersonalizationHistoryResponse:
+      type: object
+      required:
+        - pages
+        - currentProfileHash
+      properties:
+        pages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonalizationHistoryItem'
+        currentProfileHash:
+          type: string
+          pattern: "^[a-f0-9]{64}$"
+          description: Current user profile hash (for staleness detection)
+
+    PersonalizationHistoryItem:
+      type: object
+      required:
+        - url
+        - profileHash
+        - createdAt
+      properties:
+        url:
+          type: string
+          description: Page URL path
+        profileHash:
+          type: string
+          pattern: "^[a-f0-9]{64}$"
+          description: Profile hash at personalization time
+        createdAt:
+          type: string
+          format: date-time
+          description: When the page was first personalized
+
+    PageHistoryResponse:
+      type: object
+      required:
+        - found
+      properties:
+        found:
+          type: boolean
+          description: Whether the page was previously personalized
+        profileHash:
+          type: string
+          pattern: "^[a-f0-9]{64}$"
+          description: Profile hash at personalization time (if found)
+        originalContentHash:
+          type: string
+          pattern: "^[a-f0-9]{64}$"
+          description: Original content hash (if found)
+        createdAt:
+          type: string
+          format: date-time
+          description: When personalized (if found)
+        isStale:
+          type: boolean
+          description: True if profile has changed since personalization
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "validation_error"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Page content cannot be empty"
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error details
