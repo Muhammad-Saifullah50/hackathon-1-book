@@ -7,6 +7,7 @@ import { Badge } from '../components/ui/badge';
 import { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption } from '../components/ui/table';
 import HeroBox from '../components/ui/hero-box';
 import PersonalizationBar from '../components/PersonalizationBar';
+import { SimToRealWarning } from '../components/SimToRealWarning';
 
 export default {
   ...MDXComponents,
@@ -32,4 +33,5 @@ export default {
   TableCaption,
   HeroBox,
   PersonalizationBar,
+  SimToRealWarning,
 };

@@ -149,12 +149,9 @@ if __name__ == '__main__':
   </TabItem>
 </Tabs>
 
-<Alert variant="destructive">
-  <AlertTitle>Sim-to-Real Warning</AlertTitle>
-  <AlertDescription>
-    On your workstation, this 1Hz loop runs perfectly. On a real robot, if the CPU is overloaded by vision processing, your heartbeat might lag. Real-time systems require careful **QoS (Quality of Service)** tuning (e.g., setting `Reliability` to `Best Effort` for sensor data) to ensure critical messages aren't dropped.
-  </AlertDescription>
-</Alert>
+<SimToRealWarning>
+  On your workstation, this 1Hz loop runs perfectly. On a real robot, if the CPU is overloaded by vision processing, your heartbeat might lag. Real-time systems require careful **QoS (Quality of Service)** tuning (e.g., setting `Reliability` to `Best Effort` for sensor data) to ensure critical messages aren't dropped.
+</SimToRealWarning>
 
 ### Running the Node
 

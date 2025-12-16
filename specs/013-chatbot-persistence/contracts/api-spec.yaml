@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: Chat Persistence API
+  description: |
+    API for managing chat thread persistence with Neon database.
+    Note: Most chat operations go through the ChatKit `/chatkit` endpoint.
+    These additional endpoints support thread management outside ChatKit.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  /chat/threads:
+    get:
+      summary: List user's chat threads
+      description: Returns paginated list of threads for authenticated user
+      operationId: listThreads
+      tags:
+        - Threads
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: after
+          in: query
+          description: Cursor for pagination (thread ID)
+          schema:
+            type: string
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: List of threads
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /chat/threads/{threadId}:
+    get:
+      summary: Get thread details
+      description: Returns thread metadata and recent messages
+      operationId: getThread
+      tags:
+        - Threads
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/threadId'
+      responses:
+        '200':
+          description: Thread details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadWithItems'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Delete a thread
+      description: Permanently deletes thread and all its messages
+      operationId: deleteThread
+      tags:
+        - Threads
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/threadId'
+      responses:
+        '204':
+          description: Thread deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /chat/threads/{threadId}/items:
+    get:
+      summary: Get thread items (messages)
+      description: Returns paginated list of messages in a thread
+      operationId: getThreadItems
+      tags:
+        - Messages
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/threadId'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+            maximum: 100
+        - name: after
+          in: query
+          description: Cursor for pagination (item ID)
+          schema:
+            type: string
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        '200':
+          description: List of thread items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    threadId:
+      name: threadId
+      in: path
+      required: true
+      description: Thread identifier
+      schema:
+        type: string
+        pattern: '^thread_[a-z0-9]+$'
+        example: thread_abc123def456
+
+  schemas:
+    Thread:
+      type: object
+      required:
+        - id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          pattern: '^thread_[a-z0-9]+$'
+          example: thread_abc123def456
+        user_id:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+          maxLength: 255
+        metadata:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        last_message_preview:
+          type: string
+          description: Preview of the last message (for list display)
+          maxLength: 100
+
+    ThreadItem:
+      type: object
+      required:
+        - id
+        - thread_id
+        - type
+        - content
+        - created_at
+      properties:
+        id:
+          type: string
+          example: message_xyz789
+        thread_id:
+          type: string
+        type:
+          type: string
+          enum: [message, tool_call, task, workflow, attachment]
+        role:
+          type: string
+          enum: [user, assistant, system]
+          nullable: true
+        content:
+          type: object
+          description: Full message content (max 32KB)
+        created_at:
+          type: string
+          format: date-time
+        n_tokens:
+          type: integer
+          nullable: true
+
+    ThreadPage:
+      type: object
+      required:
+        - data
+        - has_more
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Thread'
+        has_more:
+          type: boolean
+        after:
+          type: string
+          nullable: true
+          description: Cursor for next page
+
+    ItemPage:
+      type: object
+      required:
+        - data
+        - has_more
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThreadItem'
+        has_more:
+          type: boolean
+        after:
+          type: string
+          nullable: true
+
+    ThreadWithItems:
+      type: object
+      properties:
+        thread:
+          $ref: '#/components/schemas/Thread'
+        items:
+          $ref: '#/components/schemas/ItemPage'
+
+    Error:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            detail: "Not authenticated"
+
+    Forbidden:
+      description: Access denied to this resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            detail: "You do not have access to this thread"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            detail: "Thread not found"

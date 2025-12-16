@@ -1,5 +1,6 @@
 from pathlib import Path
-from fastapi import FastAPI, Request
+from typing import Optional
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import Response, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from chatkit.server import StreamingResult
@@ -10,6 +11,7 @@ from dotenv import load_dotenv
 from src.api.profile.routes import router as profile_router
 from src.api.personalization.routes import router as personalization_router
 from src.api.translation.routes import router as translation_router
+from src.api.auth.dependencies import CurrentUser, get_optional_user
 
 # Load .env from the backend directory (where this file is located)
 env_path = Path(__file__).parent / ".env"
@@ -62,14 +64,20 @@ async def health_check():
     }
 
 @app.post("/chatkit")
-async def chatkit_endpoint(request: Request):
+async def chatkit_endpoint(request: Request, user: Optional[CurrentUser] = Depends(get_optional_user)):
     """
     Single endpoint for all ChatKit interactions (session, chat, tools).
+    Supports both authenticated and anonymous users.
     """
+    # Build context with user_id for authenticated users
+    # Anonymous users get empty context (in-memory session storage only)
+    context = {}
+    if user:
+        context["user_id"] = user.id
+
     # Process the request using the ChatKit server
-    # We pass an empty context dict for now, can be expanded later
-    result = await chatkit_server.process(await request.body(), {})
-    
+    result = await chatkit_server.process(await request.body(), context)
+
     if isinstance(result, StreamingResult):
         return StreamingResponse(result, media_type="text/event-stream")
     else:

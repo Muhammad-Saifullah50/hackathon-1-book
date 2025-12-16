@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChatKit, useChatKit } from '@openai/chatkit-react';
 import { X, MessageCircle, Bot } from 'lucide-react';
 import { useSafeColorMode } from '../hooks/useSafeColorMode';
@@ -6,11 +6,29 @@ import { useSafeColorMode } from '../hooks/useSafeColorMode';
 export function ChatWidget() {
   const { isDark } = useSafeColorMode();
   const [isOpen, setIsOpen] = useState(false);
+  const [currentThreadId, setCurrentThreadId] = useState<string | null>(
+    () => localStorage.getItem('chatkit_last_thread_id')
+  );
+  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
 
   const { control, sendUserMessage } = useChatKit({
     api: {
       url: 'http://localhost:8000/chatkit', // Backend endpoint
-      domainKey: 'mock-domain-key', // Required by CustomApiConfig
+      domainKey:  '', // Required by CustomApiConfig
+    },
+    // Don't auto-load threads to avoid ID mismatch issues
+    // Users can select threads from the history panel
+    // initialThread: currentThreadId || undefined,
+
+    // Save thread ID when it changes
+    onThreadChange: ({ threadId }) => {
+      console.log('🔄 Thread changed:', threadId);
+      setCurrentThreadId(threadId);
+      if (threadId) {
+        localStorage.setItem('chatkit_last_thread_id', threadId);
+      } else {
+        localStorage.removeItem('chatkit_last_thread_id');
+      }
     },
     theme: {
       colorScheme: isDark ? 'dark' : 'light',
@@ -25,8 +43,14 @@ export function ChatWidget() {
       typography: { fontFamily: "system-ui, sans-serif" },
     },
     header: {
-      enabled: false, // We use our own custom header
+      enabled: true, 
     },
+    history: {
+      enabled: true,
+      showDelete: true,
+      showRename: true,
+    },
+  
     startScreen: {
       greeting: "Hi! I'm your Robotics Tutor.",
       prompts: [
@@ -55,10 +79,23 @@ export function ChatWidget() {
   // Expose global handler for SelectionPopup
   React.useEffect(() => {
     (window as any).openRagChat = (text: string) => {
+      setPendingMessage(text); // Store the message
       setIsOpen(true); // Open the chat when triggered externally
-      sendUserMessage(text);
     };
-  }, [sendUserMessage]);
+  }, []);
+
+  // Send pending message when chat opens
+  React.useEffect(() => {
+    if (isOpen && pendingMessage && sendUserMessage) {
+      // Wait a bit for ChatKit to be ready
+      const timer = setTimeout(() => {
+        sendUserMessage({ text: pendingMessage });
+        setPendingMessage(null); // Clear pending message
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, pendingMessage, sendUserMessage]);
 
   // Closed state - show floating button
   if (!isOpen) {
@@ -79,38 +116,32 @@ export function ChatWidget() {
 
   // Open state - show full chat widget
   return (
-    <div
-      className={`fixed bottom-4 right-4 z-50 w-[350px] h-[500px] shadow-2xl rounded-xl overflow-hidden font-sans flex flex-col ${
-        isDark
-          ? 'border-2 border-emerald-500/30 bg-slate-950'
-          : 'border-2 border-slate-300 bg-white'
-      }`}
-    >
-      {/* Custom Header */}
-      <div
-        className={`flex items-center justify-between px-3 py-1.5 ${
+    <div className="fixed bottom-4 right-4 z-50">
+      {/* Close Button - positioned above the chat */}
+      <button
+        onClick={() => setIsOpen(false)}
+        className={`absolute -top-10 right-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-lg focus:outline-none ${
           isDark
-            ? 'border-b border-emerald-500/20'
-            : 'border-b border-slate-200'
+            ? 'bg-slate-800 hover:bg-slate-700 text-gray-300 hover:text-white'
+            : 'bg-white hover:bg-gray-100 text-gray-600 hover:text-gray-900'
+        }`}
+        aria-label="Close chat"
+      >
+        <X className="w-4 h-4" />
+      </button>
+
+      {/* Chat Widget */}
+      <div
+        className={`w-[350px] h-[500px] shadow-2xl rounded-xl overflow-hidden font-sans flex flex-col ${
+          isDark
+            ? 'border-2 border-emerald-500/30 bg-slate-950'
+            : 'border-2 border-slate-300 bg-white'
         }`}
       >
-        <Bot className={`w-5 h-5 ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`} />
-        <button
-          onClick={() => setIsOpen(false)}
-          className={`p-0 bg-transparent border-0 outline-none cursor-pointer transition-colors ${
-            isDark
-              ? 'text-slate-400 hover:text-slate-200'
-              : 'text-slate-500 hover:text-slate-700'
-          }`}
-          aria-label="Close chat"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* ChatKit Content */}
-      <div className="flex-1 relative overflow-hidden">
-        <ChatKit control={control} className="h-full w-full" />
+        {/* ChatKit Content */}
+        <div className="flex-1 relative overflow-hidden">
+          <ChatKit control={control} className="h-full w-full" />
+        </div>
       </div>
     </div>
   );

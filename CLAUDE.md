@@ -353,9 +353,9 @@ QDRANT_URL=http://localhost:6333
 ---
 
 ## Recent Changes
+- 013-chatbot-persistence: Added Python 3.12 (backend), TypeScript 5.x (frontend) + FastAPI, asyncpg, openai-chatkit, Pydantic (backend); React 19, Docusaurus 3.9 (frontend)
 - 012-urdu-translation: Added Python 3.12 (backend), TypeScript 5.6 (frontend)
 - 011-personalize-page: Added Python 3.12 (backend), TypeScript 5.6 (frontend)
-- 010-neon-database-migration: Added Python 3.12 (backend), TypeScript 5.x (frontend) + FastAPI, Pydantic, Better Auth, Docusaurus 3.x, python-jose
 
 ```
 1180c5b feat: integrate Radix UI Select component and update profile wizard steps
@@ -406,3 +406,5 @@ npm run test:e2e
 - Python 3.12 (backend), TypeScript 5.6 (frontend) (011-personalize-page)
 - Neon PostgreSQL (personalization_history, personalization_quota tables), localStorage (client-side cache) (011-personalize-page)
 - Neon PostgreSQL (translation_history, translation_quota tables), localStorage (client-side cache) (012-urdu-translation)
+- Python 3.12 (backend), TypeScript 5.x (frontend) + FastAPI, asyncpg, openai-chatkit, Pydantic (backend); React 19, Docusaurus 3.9 (frontend) (013-chatbot-persistence)
+- Neon PostgreSQL (serverless) with connection pooling via asyncpg (013-chatbot-persistence)

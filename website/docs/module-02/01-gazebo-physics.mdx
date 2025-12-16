@@ -73,12 +73,9 @@ The `<inertial>` tag defines the mass and inertia matrix of a robot's link. Inco
 #### Friction
 In Gazebo, friction is a property defined in the `<friction>` tag within the `<surface>` element of a `<collision>`.
 
-<Alert variant="destructive">
-  <AlertTitle>Sim-to-Real Warning</AlertTitle>
-  <AlertDescription>
-    In Gazebo, you can define "perfect friction" or even negative friction. In the real world, your robot will **slip**. Simulation will never perfectly replicate the complexities of real-world friction. Always account for discrepancies when transferring algorithms from sim to real.
-  </AlertDescription>
-</Alert>
+<SimToRealWarning>
+  In Gazebo, you can define "perfect friction" or even negative friction. In the real world, your robot will **slip**. Simulation will never perfectly replicate the complexities of real-world friction. Always account for discrepancies when transferring algorithms from sim to real.
+</SimToRealWarning>
 
 ### Activity: The Wobbly Bot
 
