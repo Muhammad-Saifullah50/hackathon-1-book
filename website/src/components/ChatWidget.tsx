@@ -2,14 +2,25 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChatKit, useChatKit } from '@openai/chatkit-react';
 import { X, MessageCircle, Bot } from 'lucide-react';
 import { useSafeColorMode } from '../hooks/useSafeColorMode';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 export function ChatWidget() {
   const { isDark } = useSafeColorMode();
   const [isOpen, setIsOpen] = useState(false);
-  const [currentThreadId, setCurrentThreadId] = useState<string | null>(
-    () => localStorage.getItem('chatkit_last_thread_id')
-  );
+  
+  // Initialize state without accessing localStorage during SSR
+  const [currentThreadId, setCurrentThreadId] = useState<string | null>(null);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+
+  // Load thread ID from localStorage only on client side
+  useEffect(() => {
+    if (ExecutionEnvironment.canUseDOM) {
+      const savedThreadId = localStorage.getItem('chatkit_last_thread_id');
+      if (savedThreadId) {
+        setCurrentThreadId(savedThreadId);
+      }
+    }
+  }, []);
 
   const { control, sendUserMessage } = useChatKit({
     api: {
@@ -24,10 +35,14 @@ export function ChatWidget() {
     onThreadChange: ({ threadId }) => {
       console.log('🔄 Thread changed:', threadId);
       setCurrentThreadId(threadId);
-      if (threadId) {
-        localStorage.setItem('chatkit_last_thread_id', threadId);
-      } else {
-        localStorage.removeItem('chatkit_last_thread_id');
+      
+      // Only access localStorage in browser environment
+      if (ExecutionEnvironment.canUseDOM) {
+        if (threadId) {
+          localStorage.setItem('chatkit_last_thread_id', threadId);
+        } else {
+          localStorage.removeItem('chatkit_last_thread_id');
+        }
       }
     },
     theme: {
@@ -77,15 +92,17 @@ export function ChatWidget() {
   });
 
   // Expose global handler for SelectionPopup
-  React.useEffect(() => {
-    (window as any).openRagChat = (text: string) => {
-      setPendingMessage(text); // Store the message
-      setIsOpen(true); // Open the chat when triggered externally
-    };
+  useEffect(() => {
+    if (ExecutionEnvironment.canUseDOM) {
+      (window as any).openRagChat = (text: string) => {
+        setPendingMessage(text); // Store the message
+        setIsOpen(true); // Open the chat when triggered externally
+      };
+    }
   }, []);
 
   // Send pending message when chat opens
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen && pendingMessage && sendUserMessage) {
       // Wait a bit for ChatKit to be ready
       const timer = setTimeout(() => {
