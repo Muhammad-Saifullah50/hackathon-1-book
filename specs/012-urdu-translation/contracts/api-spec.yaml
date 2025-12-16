@@ -1,0 +1,336 @@
+openapi: 3.0.3
+info:
+  title: Urdu Translation API
+  description: |
+    API for translating documentation page content to Urdu.
+    Supports both authenticated and anonymous users with daily quota limits.
+  version: 1.0.0
+  contact:
+    name: Physical AI & Humanoid Robotics Platform
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+  - url: https://api.physicalai.dev/api
+    description: Production server
+
+tags:
+  - name: Translation
+    description: Content translation operations
+  - name: Quota
+    description: Quota management operations
+
+paths:
+  /translate/urdu:
+    post:
+      tags:
+        - Translation
+      summary: Translate page content to Urdu
+      description: |
+        Translates the provided markdown content from English to Urdu.
+        Preserves code blocks, images, and markdown structure.
+        Requires quota availability (5 translations/day per user or IP).
+      operationId: translateToUrdu
+      security:
+        - BearerAuth: []
+        - {}  # Also allows anonymous access
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TranslationRequest'
+            examples:
+              simple:
+                summary: Simple translation request
+                value:
+                  page_content: "# Hello World\n\nThis is a test paragraph."
+                  page_url: "/docs/module-01/embodied-intelligence"
+              with_code:
+                summary: Content with code block
+                value:
+                  page_content: "# ROS 2 Basics\n\nRun the following:\n\n```bash\nros2 run demo_nodes_py talker\n```\n\nThis starts a publisher."
+                  page_url: "/docs/module-01/ros2-fundamentals"
+      responses:
+        '200':
+          description: Translation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                empty_content:
+                  value:
+                    error: "Content cannot be empty"
+                    code: "INVALID_CONTENT"
+        '429':
+          description: Quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                quota_exceeded:
+                  value:
+                    error: "Daily translation limit reached"
+                    code: "QUOTA_EXCEEDED"
+                    details:
+                      used: 5
+                      limit: 5
+                      resets_at: "2025-12-16T00:00:00Z"
+        '500':
+          description: Translation service error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /translate/quota:
+    get:
+      tags:
+        - Quota
+      summary: Get current translation quota status
+      description: |
+        Returns the current daily translation quota status for the user or IP.
+        Useful for displaying remaining translations to the user.
+      operationId: getTranslationQuota
+      security:
+        - BearerAuth: []
+        - {}  # Also allows anonymous access
+      responses:
+        '200':
+          description: Quota status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotaStatusResponse'
+              examples:
+                available:
+                  summary: Quota available
+                  value:
+                    used: 2
+                    remaining: 3
+                    limit: 5
+                    resets_at: "2025-12-16T00:00:00Z"
+                exhausted:
+                  summary: Quota exhausted
+                  value:
+                    used: 5
+                    remaining: 0
+                    limit: 5
+                    resets_at: "2025-12-16T00:00:00Z"
+
+  /translate/history:
+    get:
+      tags:
+        - Translation
+      summary: Check translation history for a page
+      description: |
+        Checks if a specific page has been previously translated by the user/IP.
+        Used for cross-device awareness and detecting stale content.
+      operationId: checkTranslationHistory
+      security:
+        - BearerAuth: []
+        - {}  # Also allows anonymous access
+      parameters:
+        - name: page_url
+          in: query
+          required: true
+          schema:
+            type: string
+            maxLength: 500
+          description: URL path of the page to check
+          example: "/docs/module-01/embodied-intelligence"
+        - name: target_language
+          in: query
+          required: false
+          schema:
+            type: string
+            default: "ur"
+          description: Target language code
+        - name: current_content_hash
+          in: query
+          required: false
+          schema:
+            type: string
+            maxLength: 64
+          description: SHA-256 hash of current content (to detect changes)
+      responses:
+        '200':
+          description: History check result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranslationHistoryResponse'
+              examples:
+                not_translated:
+                  summary: Page never translated
+                  value:
+                    has_translation: false
+                    original_content_hash: null
+                    translated_at: null
+                    content_changed: false
+                translated_current:
+                  summary: Page translated, content unchanged
+                  value:
+                    has_translation: true
+                    original_content_hash: "a1b2c3d4e5f6..."
+                    translated_at: "2025-12-14T10:30:00Z"
+                    content_changed: false
+                translated_stale:
+                  summary: Page translated, but content changed
+                  value:
+                    has_translation: true
+                    original_content_hash: "a1b2c3d4e5f6..."
+                    translated_at: "2025-12-10T10:30:00Z"
+                    content_changed: true
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Optional JWT token for authenticated users
+
+  schemas:
+    TranslationRequest:
+      type: object
+      required:
+        - page_content
+        - page_url
+      properties:
+        page_content:
+          type: string
+          minLength: 1
+          maxLength: 100000
+          description: Markdown content to translate
+        page_url:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: URL path of the page being translated
+        source_language:
+          type: string
+          default: "en"
+          description: Source language code
+        target_language:
+          type: string
+          default: "ur"
+          description: Target language code (Urdu)
+
+    TranslationResponse:
+      type: object
+      required:
+        - translated_content
+        - source_language
+        - target_language
+        - processing_time_ms
+        - original_content_hash
+        - quota_remaining
+        - quota_limit
+      properties:
+        translated_content:
+          type: string
+          description: Translated markdown content in Urdu
+        source_language:
+          type: string
+          description: Source language code
+          example: "en"
+        target_language:
+          type: string
+          description: Target language code
+          example: "ur"
+        processing_time_ms:
+          type: integer
+          description: Time taken to translate in milliseconds
+          example: 2500
+        original_content_hash:
+          type: string
+          description: SHA-256 hash of the original content
+          example: "a1b2c3d4e5f6g7h8i9j0..."
+        quota_remaining:
+          type: integer
+          description: Remaining translations for today
+          example: 3
+        quota_limit:
+          type: integer
+          description: Daily translation limit
+          example: 5
+
+    QuotaStatusResponse:
+      type: object
+      required:
+        - used
+        - remaining
+        - limit
+        - resets_at
+      properties:
+        used:
+          type: integer
+          description: Translations used today
+          example: 2
+        remaining:
+          type: integer
+          description: Translations remaining today
+          example: 3
+        limit:
+          type: integer
+          description: Daily limit
+          example: 5
+        resets_at:
+          type: string
+          format: date-time
+          description: When quota resets (midnight UTC)
+          example: "2025-12-16T00:00:00Z"
+
+    TranslationHistoryResponse:
+      type: object
+      required:
+        - has_translation
+        - content_changed
+      properties:
+        has_translation:
+          type: boolean
+          description: Whether page was previously translated
+        original_content_hash:
+          type: string
+          nullable: true
+          description: Hash of original content at translation time
+        translated_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the page was translated
+        content_changed:
+          type: boolean
+          description: Whether original content has changed since translation
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+          enum:
+            - INVALID_CONTENT
+            - INVALID_URL
+            - QUOTA_EXCEEDED
+            - TRANSLATION_FAILED
+            - SERVICE_UNAVAILABLE
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error context

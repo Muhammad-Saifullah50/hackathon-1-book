@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 # Import routers
 from src.api.profile.routes import router as profile_router
 from src.api.personalization.routes import router as personalization_router
+from src.api.translation.routes import router as translation_router
 
 # Load .env from the backend directory (where this file is located)
 env_path = Path(__file__).parent / ".env"
@@ -32,6 +33,7 @@ app.add_middleware(
 # Include routers
 app.include_router(profile_router)
 app.include_router(personalization_router)
+app.include_router(translation_router)
 
 # Initialize ChatKit Server
 chatkit_server = RagTutorChatKitServer()

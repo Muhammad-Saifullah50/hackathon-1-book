@@ -2,6 +2,7 @@ import React from 'react';
 import Heading from '@theme-original/Heading';
 import type { Props } from '@theme/Heading';
 import PersonalizationBar from '../../components/profile/PersonalizationBar';
+import TranslationBar from '../../components/translation/TranslationBar';
 import { useLocation } from '@docusaurus/router';
 
 export default function HeadingWrapper(props: Props): React.ReactElement {
@@ -24,6 +25,7 @@ export default function HeadingWrapper(props: Props): React.ReactElement {
       {showPersonalizationBar && (
         <div className="mt-4 mb-6">
           <PersonalizationBar />
+          <TranslationBar />
         </div>
       )}
     </>

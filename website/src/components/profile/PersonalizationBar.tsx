@@ -272,6 +272,16 @@ const PersonalizationBar: React.FC = () => {
         originalContentRef.current = content;
       }
     }
+
+    // Determine what the new view mode will be after toggle
+    const newViewMode = viewMode === 'personalized' ? 'original' : 'personalized';
+
+    // Dispatch custom event to notify TranslationBar about the view mode change
+    // This is needed because usePersonalization doesn't use Context, so separate instances don't share state
+    window.dispatchEvent(new CustomEvent('personalization-view-change', {
+      detail: { viewMode: newViewMode, state }
+    }));
+
     toggleView();
   };
 
