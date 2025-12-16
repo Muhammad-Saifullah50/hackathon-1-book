@@ -24,7 +24,7 @@ export function ChatWidget() {
 
   const { control, sendUserMessage } = useChatKit({
     api: {
-      url: 'http://localhost:8000/chatkit', // Backend endpoint
+      url: 'https://robotook-server.vercel.app/chatkit', // Backend endpoint
       domainKey:  '', // Required by CustomApiConfig
     },
     // Don't auto-load threads to avoid ID mismatch issues
