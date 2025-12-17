@@ -6,7 +6,7 @@ import tailwindPlugin from "./plugins/tailwind-config.cjs"; // Import the plugin
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Physical AI and Robotics',
+  title: 'Robotook',
   tagline: 'Embodied Intelligence',
   favicon: 'img/favicon.ico',
 

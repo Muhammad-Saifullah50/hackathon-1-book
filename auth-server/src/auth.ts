@@ -33,8 +33,9 @@ export const auth = betterAuth({
 
   // Advanced cookie settings for cross-domain production deployment
   advanced: {
+    useSecureCookies: true, // Force secure cookies even in dev
     cookies: {
-      sessionToken: {
+      session_token: {
         name: "better-auth.session_token",
         attributes: {
           sameSite: "none", // Required for cross-domain cookies

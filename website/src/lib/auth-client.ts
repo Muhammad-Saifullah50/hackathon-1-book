@@ -47,6 +47,9 @@ const AUTH_URL = "https://robotook-auth.vercel.app";
 export const authClient = createAuthClient({
   baseURL: AUTH_URL,
   plugins: [jwtClient()],
+  fetchOptions: {
+    credentials: "include", // Required for cross-domain cookie sending
+  },
 });
 
 // Export individual methods for convenience
