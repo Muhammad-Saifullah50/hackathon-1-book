@@ -243,7 +243,7 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
                 after=threads[-1].id if has_more and threads else None
             )
             for i, thread in enumerate(threads[:5]):  # Show first 5 threads
-            return result
+                return result
 
     async def load_thread_items(
         self,
