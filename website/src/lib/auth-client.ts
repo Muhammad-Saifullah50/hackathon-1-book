@@ -12,10 +12,11 @@
 import { createAuthClient } from "better-auth/react";
 import { jwtClient } from "better-auth/client/plugins";
 
-// Auth server URL (defaults to localhost for development)
-const AUTH_URL = typeof window !== "undefined"
-  ? (window as any).__AUTH_URL__ || "http://localhost:3001"
-  : "http://localhost:3001";
+// Auth server URL
+const AUTH_URL =
+  typeof window !== "undefined"
+    ? (window as any).__AUTH_URL__
+    : process.env.AUTH_URL;
 
 /**
  * Better Auth client instance with JWT plugin.

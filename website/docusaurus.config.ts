@@ -1,5 +1,5 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import tailwindPlugin from "./plugins/tailwind-config.cjs"; // Import the plugin
 
@@ -14,6 +14,8 @@ const config: Config = {
   customFields: {
     backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000',
     domainKey: process.env.DOMAIN_KEY || '',
+    authUrl: process.env.AUTH_URL,
+
   },
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -47,7 +49,7 @@ const config: Config = {
   },
   themes: ['@docusaurus/theme-mermaid'],
   plugins: [
-    tailwindPlugin, 
+    tailwindPlugin,
     // Commented out the search plugin for debugging
     // [
     //   require.resolve("@easyops-cn/docusaurus-search-local"),
