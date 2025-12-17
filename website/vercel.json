@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/auth/:path*",
+      "destination": "https://robotook-auth.vercel.app/api/auth/:path*"
+    }
+  ]
+}
