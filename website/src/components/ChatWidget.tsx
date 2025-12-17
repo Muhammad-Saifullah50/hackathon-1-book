@@ -38,7 +38,6 @@ export function ChatWidget() {
 
     // Save thread ID when it changes
     onThreadChange: ({ threadId }) => {
-      console.log('🔄 Thread changed:', threadId);
       setCurrentThreadId(threadId);
 
       // Only access localStorage in browser environment

@@ -8,7 +8,7 @@ import tailwindPlugin from "./plugins/tailwind-config.cjs"; // Import the plugin
 const config: Config = {
   title: 'Robotook',
   tagline: 'Embodied Intelligence',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo-dark.svg',
 
   // Custom fields to expose to client-side code
   customFields: {
@@ -24,15 +24,13 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://robotook.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  // Deployment config
+  organizationName: 'robotook',
+  projectName: 'robotook',
 
   onBrokenLinks: 'throw',
 
@@ -110,44 +108,8 @@ const config: Config = {
     },
     footer: {
       style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Module 1 Overview',
-              to: '/docs/module-01/overview',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+   
+      copyright: `Copyright © ${new Date().getFullYear()} Robotook`,
     },
     prism: {
       theme: prismThemes.github,

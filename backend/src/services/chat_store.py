@@ -94,7 +94,6 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
             )
 
             if not row:
-                print(f"❌ Thread {thread_id} NOT FOUND in database")
                 raise NotFoundError(f"Thread {thread_id} not found")
 
             # Parse JSONB metadata (asyncpg returns it as string)
@@ -110,7 +109,6 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
                 created_at=row["created_at"],
                 metadata=metadata
             )
-            print(f"✅ Thread loaded: {thread.id}, title='{thread.title}', created={thread.created_at}")
             return thread
 
     async def save_thread(self, thread: ThreadMetadata, context: Dict[str, Any]) -> None:
@@ -244,9 +242,7 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
                 has_more=has_more,
                 after=threads[-1].id if has_more and threads else None
             )
-            print(f"✅ Returning {len(threads)} threads for user_id={user_id}")
             for i, thread in enumerate(threads[:5]):  # Show first 5 threads
-                print(f"   [{i}] {thread.id} - created={thread.created_at}")
             return result
 
     async def load_thread_items(
@@ -319,7 +315,6 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
             has_more = len(rows) > limit
             data_rows = rows[:limit]
 
-            print(f"   Found {len(data_rows)} items (has_more={has_more})")
 
             # Convert rows to ThreadItem objects
             items = []
@@ -353,9 +348,7 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
                 has_more=has_more,
                 after=items[-1].id if has_more and items else None
             )
-            print(f"✅ Returning {len(items)} items for thread {thread_id}")
             for i, item in enumerate(items[:3]):  # Show first 3 items
-                print(f"   [{i}] {item.type} - {item.id}")
             return result
 
     async def add_thread_item(
@@ -403,7 +396,6 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
                 item.created_at,
                 getattr(item, 'n_tokens', None)
             )
-            print(f"✅ Item added to database: {item.id}")
 
     async def save_item(
         self, thread_id: str, item: ThreadItem, context: Dict[str, Any]
@@ -454,7 +446,6 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
                 item.created_at,
                 getattr(item, 'n_tokens', None)
             )
-            print(f"✅ Item saved to database: {item.id}")
 
     async def load_item(
         self, thread_id: str, item_id: str, context: Dict[str, Any]

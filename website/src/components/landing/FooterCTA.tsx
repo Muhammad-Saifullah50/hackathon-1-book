@@ -73,9 +73,7 @@ export function FooterCTA() {
               isDark ? 'text-slate-500' : 'text-slate-500'
             }`}
           >
-            <Badge isDark={isDark}>Powered by Panaversity</Badge>
-            <span className={`hidden sm:inline ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>|</span>
-            <Badge isDark={isDark}>Built with Gemini</Badge>
+         
           </div>
         </AnimatedSection>
       </div>
@@ -83,22 +81,6 @@ export function FooterCTA() {
   );
 }
 
-/**
- * Simple badge component for branding indicators.
- */
-function Badge({ children, isDark }: { children: React.ReactNode; isDark: boolean }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${
-        isDark
-          ? 'bg-slate-800/50 border border-white/5 text-slate-400'
-          : 'bg-slate-100 border border-slate-200 text-slate-600'
-      }`}
-    >
-      <span className={`w-1.5 h-1.5 rounded-full ${isDark ? 'bg-emerald-400' : 'bg-emerald-500'}`} />
-      {children}
-    </span>
-  );
-}
+
 
 export default FooterCTA;

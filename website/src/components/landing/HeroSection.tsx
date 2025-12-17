@@ -68,9 +68,7 @@ export function HeroSection() {
               <GlowButton href="/docs/module-01/overview" variant="primary">
                 Start Reading
               </GlowButton>
-              <GlowButton href="#curriculum" variant="secondary">
-                Watch Demo
-              </GlowButton>
+             
             </div>
 
             {/* Trust indicators */}

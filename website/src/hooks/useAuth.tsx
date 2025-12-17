@@ -57,7 +57,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }
             localStorage.setItem('access_token', tokenResult.data.token);
           }
         } catch (tokenErr) {
-          console.warn('Failed to get JWT token:', tokenErr);
           // Session exists but no JWT - still authenticated
         }
       } else {

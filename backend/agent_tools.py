@@ -26,7 +26,6 @@ def query_knowledge_base(args: KnowledgeQuery) -> str:
     Use this tool to answer questions about robotics, ROS 2, and physical AI.
     """
     query_text = args["query"]
-    print(f"DEBUG: query_knowledge_base called with: {query_text}")
     
     # Generate embedding for query
     try:
@@ -36,7 +35,6 @@ def query_knowledge_base(args: KnowledgeQuery) -> str:
         )
         query_vector = response.embeddings[0].values
     except Exception as e:
-        print(f"DEBUG: Embedding error: {e}")
         return "Error generating query embedding."
 
     # Search Qdrant
@@ -49,7 +47,6 @@ def query_knowledge_base(args: KnowledgeQuery) -> str:
         )
         hits = results_obj.points
     except Exception as e:
-        print(f"DEBUG: Qdrant search error: {e}")
         return "Error searching knowledge base."
 
     results = []
