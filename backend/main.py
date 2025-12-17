@@ -24,12 +24,16 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://robotook.vercel.app",  # Docusaurus dev server
+        "https://robotook.vercel.app",  # Frontend production
         "https://robotook-auth.vercel.app",  # Auth server
+        "http://localhost:3000",  # Docusaurus dev server
+        "http://localhost:3001",  # Auth server dev
     ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
+    expose_headers=["Content-Type", "Authorization"],
+    max_age=3600,
 )
 
 # Include routers
