@@ -30,10 +30,8 @@ app.add_middleware(
         "http://localhost:3001",  # Auth server dev
     ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
-    expose_headers=["Content-Type", "Authorization"],
-    max_age=3600,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers
