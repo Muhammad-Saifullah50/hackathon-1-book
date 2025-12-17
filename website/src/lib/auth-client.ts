@@ -13,10 +13,7 @@ import { createAuthClient } from "better-auth/react";
 import { jwtClient } from "better-auth/client/plugins";
 
 // Auth server URL
-const AUTH_URL =
-  typeof window !== "undefined"
-    ? (window as any).__AUTH_URL__
-    : process.env.AUTH_URL;
+const AUTH_URL = "https://robotook-auth.vercel.app";
 
 /**
  * Better Auth client instance with JWT plugin.
