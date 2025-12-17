@@ -3,11 +3,16 @@ import { ChatKit, useChatKit } from '@openai/chatkit-react';
 import { X, MessageCircle, Bot } from 'lucide-react';
 import { useSafeColorMode } from '../hooks/useSafeColorMode';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+
 
 export function ChatWidget() {
   const { isDark } = useSafeColorMode();
   const [isOpen, setIsOpen] = useState(false);
-  
+
+  const { siteConfig } = useDocusaurusContext();
+  const { domainKey } = siteConfig.customFields;
+
   // Initialize state without accessing localStorage during SSR
   const [currentThreadId, setCurrentThreadId] = useState<string | null>(null);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
@@ -25,7 +30,7 @@ export function ChatWidget() {
   const { control, sendUserMessage } = useChatKit({
     api: {
       url: 'https://robotook-server.vercel.app/chatkit', // Backend endpoint
-      domainKey:  '', // Required by CustomApiConfig
+      domainKey: domainKey as string, // Required by CustomApiConfig
     },
     // Don't auto-load threads to avoid ID mismatch issues
     // Users can select threads from the history panel
@@ -35,7 +40,7 @@ export function ChatWidget() {
     onThreadChange: ({ threadId }) => {
       console.log('🔄 Thread changed:', threadId);
       setCurrentThreadId(threadId);
-      
+
       // Only access localStorage in browser environment
       if (ExecutionEnvironment.canUseDOM) {
         if (threadId) {
@@ -58,14 +63,14 @@ export function ChatWidget() {
       typography: { fontFamily: "system-ui, sans-serif" },
     },
     header: {
-      enabled: true, 
+      enabled: true,
     },
     history: {
       enabled: true,
       showDelete: true,
       showRename: true,
     },
-  
+
     startScreen: {
       greeting: "Hi! I'm your Robotics Tutor.",
       prompts: [
@@ -119,11 +124,10 @@ export function ChatWidget() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 ${
-          isDark
+        className={`fixed bottom-4 right-4 z-50 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 ${isDark
             ? 'bg-emerald-500 hover:bg-emerald-400 shadow-emerald-500/25'
             : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/25'
-        }`}
+          }`}
         aria-label="Open chat"
       >
         <MessageCircle className="w-6 h-6 text-white" />
@@ -137,11 +141,10 @@ export function ChatWidget() {
       {/* Close Button - positioned above the chat */}
       <button
         onClick={() => setIsOpen(false)}
-        className={`absolute -top-10 right-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-lg focus:outline-none ${
-          isDark
+        className={`absolute -top-10 right-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-lg focus:outline-none ${isDark
             ? 'bg-slate-800 hover:bg-slate-700 text-gray-300 hover:text-white'
             : 'bg-white hover:bg-gray-100 text-gray-600 hover:text-gray-900'
-        }`}
+          }`}
         aria-label="Close chat"
       >
         <X className="w-4 h-4" />
@@ -149,11 +152,10 @@ export function ChatWidget() {
 
       {/* Chat Widget */}
       <div
-        className={`w-[350px] h-[500px] shadow-2xl rounded-xl overflow-hidden font-sans flex flex-col ${
-          isDark
+        className={`w-[350px] h-[500px] shadow-2xl rounded-xl overflow-hidden font-sans flex flex-col ${isDark
             ? 'border-2 border-emerald-500/30 bg-slate-950'
             : 'border-2 border-slate-300 bg-white'
-        }`}
+          }`}
       >
         {/* ChatKit Content */}
         <div className="flex-1 relative overflow-hidden">

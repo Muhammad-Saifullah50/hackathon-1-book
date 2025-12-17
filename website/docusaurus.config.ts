@@ -13,6 +13,7 @@ const config: Config = {
   // Custom fields to expose to client-side code
   customFields: {
     backendUrl: process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000',
+    domainKey: process.env.DOMAIN_KEY || '',
   },
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future

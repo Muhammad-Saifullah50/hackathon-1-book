@@ -6,19 +6,19 @@
     "lessons": [
       {
         "title": "The Awakening",
-        "slug": "/module-01/embodied-intelligence"
+        "slug": "/module-01/01-embodied-intelligence"
       },
       {
         "title": "ROS 2 Fundamentals",
-        "slug": "/module-01/ros2-fundamentals"
+        "slug": "/module-01/02-ros2-fundamentals"
       },
       {
         "title": "Anatomy of a Humanoid",
-        "slug": "/module-01/urdf-and-tf"
+        "slug": "/module-01/03-urdf-and-tf"
       },
       {
         "title": "Capstone: The Blind Walker",
-        "slug": "/module-01/capstone-project"
+        "slug": "/module-01/04-capstone-project"
       }
     ]
   },
@@ -29,15 +29,15 @@
     "lessons": [
       {
         "title": "The Physics Engine (Gazebo)",
-        "slug": "/module-02/gazebo-physics"
+        "slug": "/module-02/01-gazebo-physics"
       },
       {
         "title": "High-Fidelity Rendering (Unity)",
-        "slug": "/module-02/unity-integration"
+        "slug": "/module-02/02-unity-integration"
       },
       {
         "title": "Capstone: The Virtual Obstacle Course",
-        "slug": "/module-02/capstone-digital-twin"
+        "slug": "/module-02/03-capstone-digital-twin"
       }
     ]
   },
@@ -48,15 +48,15 @@
     "lessons": [
       {
         "title": "Photorealistic Simulation (Isaac Sim)",
-        "slug": "/module-03/isaac-sim-setup"
+        "slug": "/module-03/01-isaac-sim-setup"
       },
       {
         "title": "Hardware-Accelerated Perception (Isaac ROS)",
-        "slug": "/module-03/isaac-ros-gems"
+        "slug": "/module-03/02-isaac-ros-gems"
       },
       {
         "title": "Capstone: The Perception Pipeline",
-        "slug": "/module-03/capstone-perception"
+        "slug": "/module-03/03-capstone-perception"
       }
     ]
   },
@@ -67,19 +67,19 @@
     "lessons": [
       {
         "title": "The Voice Interface (Ears)",
-        "slug": "/module-04/voice-to-action"
+        "slug": "/module-04/01-voice-to-action"
       },
       {
         "title": "Cognitive Planning (The Brain)",
-        "slug": "/module-04/cognitive-planning"
+        "slug": "/module-04/02-cognitive-planning"
       },
       {
         "title": "Humanoid Mechanics (The Body)",
-        "slug": "/module-04/humanoid-mechanics"
+        "slug": "/module-04/03-humanoid-mechanics"
       },
       {
         "title": "The Autonomous Humanoid",
-        "slug": "/module-04/final-capstone"
+        "slug": "/module-04/04-final-capstone"
       }
     ]
   }
