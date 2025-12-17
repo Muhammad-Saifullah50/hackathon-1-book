@@ -93,9 +93,9 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'Physical AI and Robotics',
+      title: 'Robotook',
       logo: {
-        alt: 'Physical AI and Robotics Logo',
+        alt: 'Robotook Logo',
         src: 'img/logo.svg', // For light mode
         srcDark: 'img/logo-dark.svg', // For dark mode
       },
