@@ -348,7 +348,6 @@ class NeonChatKitStore(Store[Dict[str, Any]]):
                 has_more=has_more,
                 after=items[-1].id if has_more and items else None
             )
-            for i, item in enumerate(items[:3]):  # Show first 3 items
             return result
 
     async def add_thread_item(
