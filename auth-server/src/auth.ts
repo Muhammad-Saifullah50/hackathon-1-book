@@ -31,20 +31,18 @@ export const auth = betterAuth({
     },
   },
 
-  // Advanced cookie settings for production deployment
-  // NOTE: Cannot use shared domain (.vercel.app) as it's a public suffix
-  // Auth must be on same origin as frontend (via Vercel rewrites)
+  // Advanced cookie settings for cross-domain production deployment
   advanced: {
-    useSecureCookies: true, // Force secure cookies
+    useSecureCookies: true, // Force secure cookies even in dev
     cookies: {
       session_token: {
         name: "better-auth.session_token",
         attributes: {
-          sameSite: "lax", // Lax for same-origin (changed from "none")
-          secure: true,
+          sameSite: "none", // Required for cross-domain cookies
+          secure: true, // Required for SameSite=None
           httpOnly: true,
           path: "/",
-          // domain: undefined - No domain means cookie stays on current origin only
+          domain: process.env.COOKIE_DOMAIN || undefined, // e.g., ".vercel.app" for shared cookies
         },
       },
     },

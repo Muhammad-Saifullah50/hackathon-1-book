@@ -13,9 +13,7 @@ import { createAuthClient } from "better-auth/react";
 import { jwtClient } from "better-auth/client/plugins";
 
 // Auth server URL
-// Using relative path via Vercel rewrite to avoid cross-domain cookie issues
-// Vercel rewrites /api/auth/* to https://robotook-auth.vercel.app/api/auth/*
-const AUTH_URL = typeof window !== "undefined" ? window.location.origin : "https://robotook.vercel.app";
+const AUTH_URL = "https://robotook-auth.vercel.app";
 
 /**
  * Better Auth client instance with JWT plugin.
