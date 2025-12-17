@@ -11,7 +11,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Parse CORS origins from environment
-const corsOrigins = (process.env.CORS_ORIGINS || "http://localhost:3000,http://localhost:8000").split(",");
+const corsOrigins = [
+  "http://localhost:3000",
+  "http://localhost:8000",
+  "https://robotook.vercel.app",
+  "https://robotook-auth.vercel.app",
+  ...(process.env.CORS_ORIGINS?.split(",") || []),
+].filter(Boolean);
 
 // CORS configuration for frontend and backend origins
 app.use(

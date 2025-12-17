@@ -31,6 +31,22 @@ export const auth = betterAuth({
     },
   },
 
+  // Advanced cookie settings for cross-domain production deployment
+  advanced: {
+    cookies: {
+      sessionToken: {
+        name: "better-auth.session_token",
+        attributes: {
+          sameSite: "none", // Required for cross-domain cookies
+          secure: true, // Required for SameSite=None
+          httpOnly: true,
+          path: "/",
+          domain: process.env.COOKIE_DOMAIN || undefined, // e.g., ".vercel.app" for shared cookies
+        },
+      },
+    },
+  },
+
   // JWT plugin for API authentication
   plugins: [
     jwt({
@@ -48,7 +64,13 @@ export const auth = betterAuth({
   ],
 
   // Trust proxy headers (for deployment behind reverse proxy)
-  trustedOrigins: (process.env.CORS_ORIGINS || "http://localhost:3000,http://localhost:8000").split(","),
+  trustedOrigins: [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "https://robotook.vercel.app",
+    "https://robotook-auth.vercel.app",
+    ...(process.env.CORS_ORIGINS?.split(",") || []),
+  ].filter(Boolean),
 });
 
 export type Auth = typeof auth;
