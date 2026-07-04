@@ -27,7 +27,7 @@ COLLECTION_NAME = "rag_tutor_knowledge_base"
 
 
 def get_embedding(text, retries=5):
-    # Using gemini-embedding-001
+    # Using gemini-embedding-001 (3072 dims)
     for attempt in range(retries):
         try:
             response = client.models.embed_content(
@@ -48,15 +48,30 @@ def get_embedding(text, retries=5):
 
 
 def ingest_docs(docs_dir="website/docs"):
+    # Verify embedding model works
+    print(f"Embedding model: gemini-embedding-001")
+    try:
+        test = client.models.embed_content(
+            model="gemini-embedding-001", contents="test"
+        )
+        dims = len(test.embeddings[0].values)
+        print(f"Embedding model OK — vector dims: {dims}")
+    except Exception as e:
+        print(f"ERROR: Embedding model verification failed: {e}")
+        raise
+
     # Create collection if not exists
     try:
-        qdrant.get_collection(COLLECTION_NAME)
+        existing = qdrant.get_collection(COLLECTION_NAME)
+        old_count = existing.points_count
+        print(f"Collection '{COLLECTION_NAME}' exists — {old_count} existing points")
     except Exception:
+        print(
+            f"Creating collection '{COLLECTION_NAME}' with size={dims}, COSINE distance"
+        )
         qdrant.create_collection(
             collection_name=COLLECTION_NAME,
-            vectors_config=VectorParams(
-                size=3072, distance=Distance.COSINE
-            ),  # gemini-embedding-001 is 3072 dims
+            vectors_config=VectorParams(size=dims, distance=Distance.COSINE),
         )
 
     files = glob.glob(f"{docs_dir}/**/*.mdx", recursive=True)
@@ -105,7 +120,9 @@ def ingest_docs(docs_dir="website/docs"):
 
     if points:
         qdrant.upsert(collection_name=COLLECTION_NAME, points=points)
+        info = qdrant.get_collection(COLLECTION_NAME)
         print(f"Ingested {len(points)} chunks from {len(files)} files.")
+        print(f"Collection now has {info.points_count} total points.")
     else:
         print("No chunks to ingest.")
 
